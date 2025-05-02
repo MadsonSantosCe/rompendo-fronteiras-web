@@ -1,13 +1,11 @@
 import "./App.css";
-import { ModeToggle } from "./components/mode-toggle";
 import { ThemeProvider } from "./components/theme-provider";
+import { Router } from "./routes/Router";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div>
-        <ModeToggle />
-      </div>
+      <Router />
     </ThemeProvider>
   );
 }
