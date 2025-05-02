@@ -31,6 +31,7 @@ interface IResponseSignIn {
 
 interface IAuthContext extends IAuthState {
   signIn: (email: string, password: string) => void;
+  signUp: (name: string, email: string, password: string) => void;
   signOut: () => void;
 }
 
@@ -51,23 +52,13 @@ function AuthProvider({ children }: AuthProviderProps) {
     };
   });
 
-  const signOut = useCallback(() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setData({} as IAuthState);
-    navigate("/login");
-  }, [navigate]);
-
   const signIn = useCallback(
     async (email: string, password: string) => {
       try {
-        const response = await api.post(
-          "/auth/sing-in",
-          {
-            email,
-            password,
-          }
-        );
+        const response = await api.post("/auth/sing-in", {
+          email,
+          password,
+        });
 
         const { token, user } = response.data as IResponseSignIn;
         setData({ token, user });
@@ -83,13 +74,43 @@ function AuthProvider({ children }: AuthProviderProps) {
     [navigate]
   );
 
+  const signUp = useCallback(
+    async (name: string, email: string, password: string) => {
+      try {
+        const response = await api.post("/auth/sing-up", {
+          name,
+          email,
+          password,
+        });
+        
+        const { token, user } = response.data as IResponseSignIn;
+        setData({ token, user });
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+        navigate("/");
+        return user;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [navigate]
+  );
+
+  const signOut = useCallback(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setData({} as IAuthState);
+    navigate("/login");
+  }, [navigate]);
+
   const contextValue = useMemo(
     () => ({
       ...data,
       signIn,
+      signUp,
       signOut,
     }),
-    [data, signIn, signOut]
+    [data, signIn, signUp, signOut]
   );
 
   return (
