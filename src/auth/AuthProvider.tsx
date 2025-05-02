@@ -55,7 +55,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const signIn = useCallback(
     async (email: string, password: string) => {
       try {
-        const response = await api.post("/auth/sing-in", {
+        const response = await api.post("/auth/sign-in", {
           email,
           password,
         });
@@ -77,7 +77,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const signUp = useCallback(
     async (name: string, email: string, password: string) => {
       try {
-        const response = await api.post("/auth/sing-up", {
+        const response = await api.post("/auth/sign-up", {
           name,
           email,
           password,
