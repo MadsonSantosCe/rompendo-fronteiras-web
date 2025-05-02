@@ -5,7 +5,7 @@ export const Login = () => {
   const { signIn } = UseAuthentication();
 
   const handleSignIn = () => {
-    signIn("user@email.com", "123456");
+    signIn("test@teste.com", "1234567");
   };
 
   return (

@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   createContext,
   useCallback,
@@ -19,6 +20,12 @@ interface IUser {
 
 interface IAuthState {
   token: string | null;
+  user: IUser;
+}
+
+interface IResponseSignIn {
+  message: string;
+  token: string;
   user: IUser;
 }
 
@@ -51,19 +58,31 @@ function AuthProvider({ children }: AuthProviderProps) {
     navigate("/login");
   }, [navigate]);
 
-  const signIn = useCallback((email: string, password: string) => {
-    // Aqui você deve fazer a autenticação com o backend
-    const token = password; // Simulando um token com a senha
-    const user = { id: "1", email: email, name: "User" };
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/auth/sing-in",
+          {
+            email,
+            password,
+          }
+        );
 
-    setData({ token, user });
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
+        const { token, user } = response.data as IResponseSignIn;
+        setData({ token, user });
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
-    navigate("/");
-    return user;
-  }, [navigate]);
-  
+        navigate("/");
+        return user;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [navigate]
+  );
+
   const contextValue = useMemo(
     () => ({
       ...data,
