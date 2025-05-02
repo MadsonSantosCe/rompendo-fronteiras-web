@@ -23,7 +23,7 @@ interface IAuthState {
   user: IUser;
 }
 
-interface IResponseSignIn {
+interface IResponseAuth {
   message: string;
   token: string;
   user: IUser;
@@ -60,7 +60,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           password,
         });
 
-        const { token, user } = response.data as IResponseSignIn;
+        const { token, user } = response.data as IResponseAuth;
         setData({ token, user });
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
@@ -82,8 +82,8 @@ function AuthProvider({ children }: AuthProviderProps) {
           email,
           password,
         });
-        
-        const { token, user } = response.data as IResponseSignIn;
+
+        const { token, user } = response.data as IResponseAuth;
         setData({ token, user });
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
