@@ -1,9 +1,8 @@
-import { UseAuthentication } from "@/auth/AuthProvider";
+import { UseAuthentication } from "@/services/auth/AuthProvider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 
 export const Home = () => {
-
   const { signOut } = UseAuthentication();
 
   const handleSignOut = () => {
@@ -13,7 +12,9 @@ export const Home = () => {
   return (
     <div>
       <ModeToggle />
-      <Button className="m-4" onClick={handleSignOut}>SignOut</Button>
+      <Button className="m-4" onClick={handleSignOut}>
+        SignOut
+      </Button>
     </div>
   );
 };

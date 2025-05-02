@@ -1,4 +1,4 @@
-import { UseAuthentication } from "@/auth/AuthProvider";
+import { UseAuthentication } from "@/services/auth/AuthProvider";
 import { Button } from "@/components/ui/button";
 
 export const Login = () => {
@@ -10,7 +10,9 @@ export const Login = () => {
 
   return (
     <div>
-      <Button className="m-4" onClick={handleSignIn}>SignIn</Button>
+      <Button className="m-4" onClick={handleSignIn}>
+        SignIn
+      </Button>
     </div>
   );
 };

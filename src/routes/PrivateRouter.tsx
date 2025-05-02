@@ -1,4 +1,4 @@
-import { UseAuthentication } from "@/auth/AuthProvider";
+import { UseAuthentication } from "@/services/auth/AuthProvider";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRouter = () => {
