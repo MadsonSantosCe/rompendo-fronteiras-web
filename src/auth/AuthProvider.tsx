@@ -49,7 +49,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     localStorage.removeItem("user");
     setData({} as IAuthState);
     navigate("/login");
-  }, []);
+  }, [navigate]);
 
   const signIn = useCallback((email: string, password: string) => {
     // Aqui você deve fazer a autenticação com o backend
@@ -62,7 +62,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     navigate("/");
     return user;
-  }, []);
+  }, [navigate]);
   
   const contextValue = useMemo(
     () => ({
