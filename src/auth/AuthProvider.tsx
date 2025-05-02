@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/api/api";
 import {
   createContext,
   useCallback,
@@ -61,8 +61,8 @@ function AuthProvider({ children }: AuthProviderProps) {
   const signIn = useCallback(
     async (email: string, password: string) => {
       try {
-        const response = await axios.post(
-          "http://localhost:3000/api/auth/sing-in",
+        const response = await api.post(
+          "/auth/sing-in",
           {
             email,
             password,
