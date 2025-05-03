@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { UseAuthentication } from "@/services/auth/authProvider";
 import { useSignUp } from "@/services/auth/authServices";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
-  const { setAuthData } = UseAuthentication();
   const navigate = useNavigate();
   const { mutateAsync, error } = useSignUp();
 
@@ -16,8 +14,7 @@ export const Register = () => {
     const password = "123456";
 
     try {
-      const { token, user } = await mutateAsync({ name, email, password });
-      setAuthData({ token, user });
+      await mutateAsync({ name, email, password });
       navigate("/");
     } catch (err) {
       console.error("Erro no login:", err);

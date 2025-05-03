@@ -5,8 +5,8 @@ import {
   ISignUpPayload,
 } from "@/types/authTypes";
 import { useMutation } from "@tanstack/react-query";
+import { UseAuthentication } from "./authProvider";
 
-// Requisição para login
 const signInRequest = async ({
   email,
   password,
@@ -15,7 +15,6 @@ const signInRequest = async ({
   return response.data;
 };
 
-// Requisição para cadastro
 const signUpRequest = async ({
   name,
   email,
@@ -25,21 +24,30 @@ const signUpRequest = async ({
   return response.data;
 };
 
-// Hook React Query para login
 export const useSignIn = () => {
+  const { setAuthData } = UseAuthentication();
+
   return useMutation({
-    mutationFn: signInRequest,
+    mutationFn: async (payload: ISignInPayload) => {
+      const data = await signInRequest(payload);
+      setAuthData(data);
+      return data;
+    },
   });
 };
 
-// Hook React Query para cadastro
 export const useSignUp = () => {
+  const { setAuthData } = UseAuthentication();
+
   return useMutation({
-    mutationFn: signUpRequest,
+    mutationFn: async (payload: ISignUpPayload) => {
+      const data = await signUpRequest(payload);
+      setAuthData(data);
+      return data;
+    },
   });
 };
 
-// Apenas limpa storage
 export const signOut = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
