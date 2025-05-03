@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useSignIn } from "@/services/auth/authServices";
+import { useSignIn } from "@/hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {

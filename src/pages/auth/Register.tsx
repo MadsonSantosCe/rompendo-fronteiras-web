@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useSignUp } from "@/services/auth/authServices";
+import { useSignUp } from "@/hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {

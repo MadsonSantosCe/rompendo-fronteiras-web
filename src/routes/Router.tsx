@@ -2,7 +2,7 @@ import { Home } from "@/pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "@/pages/auth/Login";
 import PrivateRouter from "./privateRouter";
-import { AppcontextProvider } from "@/services/auth/contextProvider";
+import { AppcontextProvider } from "@/context/auth/contextProvider";
 import { Register } from "@/pages/auth/Register";
 
 export const Router = () => {
