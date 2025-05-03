@@ -1,18 +1,35 @@
-import { UseAuthentication } from "@/services/auth/authProvider";
 import { Button } from "@/components/ui/button";
+import { UseAuthentication } from "@/services/auth/authProvider";
+import { useSignIn } from "@/services/auth/authServices";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
-  const { signIn } = UseAuthentication();
+  
+  const navigate = useNavigate();
+  const { setAuthData } = UseAuthentication();
+  const { mutateAsync, error } = useSignIn();
 
-  const handleSignIn = () => {
-    signIn("test@teste.com", "1234567");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const email = "example@mail.com";
+    const password = "123456";
+
+    try {
+      const { token, user } = await mutateAsync({ email, password });
+      setAuthData({ token, user });
+      navigate("/");
+    } catch (err) {
+      console.error("Erro no login:", err);
+    }
   };
 
   return (
-    <div>
-      <Button className="m-4" onClick={handleSignIn}>
+    <form onSubmit={handleSubmit}>
+      <Button className="m-4" type="submit">
         SignIn
       </Button>
-    </div>
+      {error && <p>Erro ao autenticar</p>}
+    </form>
   );
-};
+}

@@ -1,12 +1,14 @@
-import { UseAuthentication } from "@/services/auth/authProvider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
+import { signOut } from "@/services/auth/authServices";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
-  const { signOut } = UseAuthentication();
 
+  const navigate = useNavigate();
   const handleSignOut = () => {
     signOut();
+    navigate("/login");
   };
 
   return (
