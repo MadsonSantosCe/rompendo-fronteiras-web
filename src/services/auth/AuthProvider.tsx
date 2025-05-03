@@ -1,4 +1,3 @@
-import { api } from "@/services/api/api";
 import {
   createContext,
   useCallback,
@@ -8,14 +7,15 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 
+import {
+  useSignIn,
+  useSignUp,
+  signOut as signOutService,
+} from "@/services/auth/authServices";
+import { IUser } from "@/types/authTypes";
+
 interface AuthProviderProps {
   children: React.ReactNode;
-}
-
-interface IUser {
-  id: string;
-  email: string;
-  name: string;
 }
 
 interface IAuthState {
@@ -23,17 +23,17 @@ interface IAuthState {
   user: IUser;
 }
 
-interface IResponseAuth {
-  message: string;
-  token: string;
-  user: IUser;
-}
-
 interface IAuthContext extends IAuthState {
-  signIn: (email: string, password: string) => void;
-  signUp: (name: string, email: string, password: string) => void;
+  signIn: (email: string, password: string) => Promise<IUser | void>;
+  signUp: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<IUser | void>;
   signOut: () => void;
 }
+
+const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate();
@@ -52,53 +52,43 @@ function AuthProvider({ children }: AuthProviderProps) {
     };
   });
 
+  const { mutateAsync: signInMutation } = useSignIn();
+  const { mutateAsync: signUpMutation } = useSignUp();
+
   const signIn = useCallback(
     async (email: string, password: string) => {
       try {
-        const response = await api.post("/auth/sign-in", {
-          email,
-          password,
-        });
-
-        const { token, user } = response.data as IResponseAuth;
+        const { token, user } = await signInMutation({ email, password });
         setData({ token, user });
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
-
         navigate("/");
         return user;
       } catch (error) {
-        console.error(error);
+        console.error("Erro ao fazer login:", error);
       }
     },
-    [navigate]
+    [signInMutation, navigate]
   );
 
   const signUp = useCallback(
     async (name: string, email: string, password: string) => {
       try {
-        const response = await api.post("/auth/sign-up", {
-          name,
-          email,
-          password,
-        });
-
-        const { token, user } = response.data as IResponseAuth;
+        const { token, user } = await signUpMutation({ name, email, password });
         setData({ token, user });
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         navigate("/");
         return user;
       } catch (error) {
-        console.error(error);
+        console.error("Erro ao cadastrar:", error);
       }
     },
-    [navigate]
+    [signUpMutation, navigate]
   );
 
   const signOut = useCallback(() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    signOutService();
     setData({} as IAuthState);
     navigate("/login");
   }, [navigate]);
@@ -118,14 +108,12 @@ function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
-const AuthContext = createContext<IAuthContext>({} as IAuthContext);
-
 function UseAuthentication(): IAuthContext {
   const context = useContext(AuthContext);
 
   if (!context) {
     throw new Error(
-      "UseAuthentication precisa deve ser usado dentro de AuthProvider"
+      "UseAuthentication precisa ser usado dentro de AuthProvider"
     );
   }
 

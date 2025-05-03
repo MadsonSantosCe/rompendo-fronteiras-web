@@ -1,4 +1,4 @@
-import { UseAuthentication } from "@/services/auth/AuthProvider";
+import { UseAuthentication } from "@/services/auth/authProvider";
 import { Button } from "@/components/ui/button";
 
 export const Register = () => {

@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import { AuthProvider } from "./AuthProvider";
+import { AuthProvider } from "./authProvider";
 
 type AppContextProps = {
-    children: ReactNode
-  }
+  children: ReactNode;
+};
 
 export function AppcontextProvider({ children }: AppContextProps) {
   return <AuthProvider>{children}</AuthProvider>;

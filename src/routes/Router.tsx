@@ -1,9 +1,9 @@
-import { Home } from "@/page/Home";
+import { Home } from "@/pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Login } from "@/page/auth/Login";
-import PrivateRouter from "./PrivateRouter";
-import { AppcontextProvider } from "@/services/auth/ContextProvider";
-import { Register } from "@/page/auth/Register";
+import { Login } from "@/pages/auth/Login";
+import PrivateRouter from "./privateRouter";
+import { AppcontextProvider } from "@/services/auth/contextProvider";
+import { Register } from "@/pages/auth/Register";
 
 export const Router = () => {
   return (
