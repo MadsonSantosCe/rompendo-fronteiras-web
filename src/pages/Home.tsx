@@ -1,22 +1,23 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
-import { signOut } from "@/services/auth/authServices";
+import { useSignOut } from "@/hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
-
+  const { mutateAsync, isPending, error } = useSignOut();
   const navigate = useNavigate();
   const handleSignOut = () => {
-    signOut();
+    mutateAsync();
     navigate("/login");
   };
 
   return (
     <div>
       <ModeToggle />
-      <Button className="m-4" onClick={handleSignOut}>
+      <Button className="m-4" disabled={ isPending} onClick={handleSignOut}>
         SignOut
-      </Button>
+      </Button>      
+      {error && <p>Erro ao sair</p>}
     </div>
   );
 };

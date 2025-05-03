@@ -22,7 +22,11 @@ export const signUpRequest = async ({
   return response.data;
 };
 
-export const signOut = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+export const signOutRequest = async (): Promise<void> => {
+  await api.post("/auth/sign-out"); 
+};
+
+export const refreshTokenRequest = async (): Promise<IResponseAuth> => {
+  const response = await api.post("/auth/refresh-token",);
+  return response.data;
 };
