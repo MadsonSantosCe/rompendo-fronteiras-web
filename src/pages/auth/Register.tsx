@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const navigate = useNavigate();
-  const { mutateAsync, error } = useSignUp();
+  const { mutateAsync, isPending ,error } = useSignUp();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ export const Register = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Button className="m-4" type="submit">
+      <Button className="m-4" disabled={isPending} type="submit">
         SignUp
       </Button>
       {error && <p>Erro ao autenticar</p>}
