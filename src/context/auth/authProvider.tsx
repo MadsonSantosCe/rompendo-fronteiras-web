@@ -31,13 +31,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
 
-    if (!token || !user) {
-      return { token: null, user: null };
-    }
-
     return {
       token,
-      user: JSON.parse(user),
+      user: user ? JSON.parse(user) : null,
     };
   });
 
