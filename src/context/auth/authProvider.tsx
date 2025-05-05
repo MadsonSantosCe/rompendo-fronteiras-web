@@ -8,6 +8,7 @@ import {
 } from "react";
 import { IUser } from "@/types/authTypes";
 import { useRefreshToken } from "@/hooks/auth/useAuth";
+import { setAuthToken } from "@/services/api/api";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -58,6 +59,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     ({ token, user }: { token: string; user: IUser }) => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      setAuthToken(token);
       setData({ token, user });
     },
     []

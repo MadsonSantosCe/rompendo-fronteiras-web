@@ -7,11 +7,14 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-api.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+export const setAuthToken = (token: string) => {
+  api.interceptors.request.use(
+    (config) => {
+      config.headers.set('authorization', `Bearer ${token}`);
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+};
