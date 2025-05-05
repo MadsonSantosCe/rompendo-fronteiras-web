@@ -38,7 +38,27 @@ function AuthProvider({ children }: AuthProviderProps) {
     };
   });
 
+  const setAuthData = useCallback(
+    ({ token, user }: { token: string; user: IUser }) => {
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setAuthToken(token);
+      setData({ token, user });
+    },
+    []
+  );
+
+  const removeAuthData = useCallback(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setData({ token: null, user: null });
+  }, []);
+
   const refreshToken = async () => {
+    if (location.pathname === "/login" || location.pathname === "/register") {
+      return;
+    }
+
     try {
       const response = await mutateAsync();
       setAuthData({
@@ -55,21 +75,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     refreshToken();
   }, []);
 
-  const setAuthData = useCallback(
-    ({ token, user }: { token: string; user: IUser }) => {
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      setAuthToken(token);
-      setData({ token, user });
-    },
-    []
-  );
-
-  const removeAuthData = useCallback(() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setData({ token: null, user: null });
-  }, []);
+  
 
   const contextValue = useMemo(
     () => ({
