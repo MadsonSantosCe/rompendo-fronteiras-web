@@ -27,34 +27,50 @@ const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 function AuthProvider({ children }: AuthProviderProps) {
   const { mutateAsync } = useRefreshToken();
-  const [data, setData] = useState<IAuthState>({
-    user: null,
-    token: null,
+  const [data, setData] = useState<IAuthState>(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (!token || !user) {
+      return { token: null, user: null };
+    }
+
+    return {
+      token,
+      user: JSON.parse(user),
+    };
   });
 
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const response = await mutateAsync();
-        setData({ user: response.user, token: response.token });
-      } catch (err) {
-        console.log("Erro ao tentar restaurar sessão:", err);
-        setData({ user: null, token: null });
-      }
-    };
+  const refreshToken = async () => {
+    try {
+      const response = await mutateAsync();
+      setAuthData({
+        token: response.token,
+        user: response.user,
+      });
+    } catch (err) {
+      console.log("Erro ao tentar restaurar sessão:", err);
+      removeAuthData();
+    }
+  };
 
-    loadUser();
+  useEffect(() => {
+    refreshToken();
   }, []);
 
   const setAuthData = useCallback(
     ({ token, user }: { token: string; user: IUser }) => {
-      setData({ user, token });
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setData({ token, user });
     },
     []
   );
 
   const removeAuthData = useCallback(() => {
-    setData({ user: null, token: null });
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setData({ token: null, user: null });
   }, []);
 
   const contextValue = useMemo(
