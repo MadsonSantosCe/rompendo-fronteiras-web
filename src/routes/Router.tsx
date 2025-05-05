@@ -1,7 +1,7 @@
 import { Home } from "@/pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "@/pages/auth/Login";
-import PrivateRouter from "./PrivateRouter";
+import PrivateRouter from "./privateRouter";
 import { AppcontextProvider } from "@/context/auth/contextProvider";
 import { Register } from "@/pages/auth/Register";
 
