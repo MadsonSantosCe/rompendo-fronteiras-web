@@ -1,7 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "./components/theme-provider";
-import { Router } from "./routes/router";
+import { Router } from "./routes/Router";
 import { queryClient } from "./lib/TanStack/queryClient";
 import { env } from "./config/env";
 

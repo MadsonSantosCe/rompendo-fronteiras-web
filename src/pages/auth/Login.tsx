@@ -1,11 +1,11 @@
+import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { useSignIn } from "@/hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
-  
   const navigate = useNavigate();
-  const { mutateAsync, isPending ,error } = useSignIn();
+  const { mutateAsync, isPending, error } = useSignIn();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,11 +22,13 @@ export const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Button className="m-4" disabled={isPending} type="submit">
-        SignIn
-      </Button>
-      {error && <p>Erro ao autenticar</p>}
-    </form>
+    <AuthLayout>
+      <form onSubmit={handleSubmit}>
+        <Button className="m-4" disabled={isPending} type="submit">
+          SignIn
+        </Button>
+        {error && <p>Erro ao autenticar</p>}
+      </form>
+    </AuthLayout>
   );
-}
+};

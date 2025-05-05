@@ -1,3 +1,4 @@
+import { MainLayout } from "@/components/layout/MainLayout";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { useSignOut } from "@/hooks/auth/useAuth";
@@ -12,12 +13,14 @@ export const Home = () => {
   };
 
   return (
-    <div>
-      <ModeToggle />
-      <Button className="m-4" disabled={ isPending} onClick={handleSignOut}>
-        SignOut
-      </Button>      
-      {error && <p>Erro ao sair</p>}
-    </div>
+    <MainLayout>
+      <div>
+        <ModeToggle />
+        <Button  disabled={isPending} onClick={handleSignOut}>
+          SignOut
+        </Button>
+        {error && <p>Erro ao sair</p>}
+      </div>
+    </MainLayout>
   );
 };

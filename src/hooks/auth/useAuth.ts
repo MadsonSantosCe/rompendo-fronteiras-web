@@ -1,5 +1,9 @@
-import { UseAuthentication } from "@/context/auth/authProvider";
-import { refreshTokenRequest, signInRequest, signUpRequest } from "@/services/auth/authServices";
+import { UseAuthentication } from "@/components/auth/authProvider";
+import {
+  refreshTokenRequest,
+  signInRequest,
+  signUpRequest,
+} from "@/services/auth/authServices";
 import { ISignInPayload, ISignUpPayload } from "@/types/authTypes";
 import { useMutation } from "@tanstack/react-query";
 
