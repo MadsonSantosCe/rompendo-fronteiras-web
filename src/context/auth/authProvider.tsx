@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import {
   createContext,
   useCallback,
@@ -28,20 +29,25 @@ const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 function AuthProvider({ children }: AuthProviderProps) {
   const { mutateAsync } = useRefreshToken();
+
   const [data, setData] = useState<IAuthState>(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
+    const token = Cookies.get("token");
+    const user = Cookies.get("user");
+
+    if (!token || !user) {
+      return { token: null, user: null };
+    }
 
     return {
       token,
-      user: user ? JSON.parse(user) : null,
+      user: JSON.parse(user),
     };
   });
 
   const setAuthData = useCallback(
     ({ token, user }: { token: string; user: IUser }) => {
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      Cookies.set("token", token, { expires: 7 }); // 7 dias
+      Cookies.set("user", JSON.stringify(user), { expires: 7 });
       setAuthToken(token);
       setData({ token, user });
     },
@@ -49,16 +55,12 @@ function AuthProvider({ children }: AuthProviderProps) {
   );
 
   const removeAuthData = useCallback(() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    Cookies.remove("token");
+    Cookies.remove("user");
     setData({ token: null, user: null });
   }, []);
 
   const refreshToken = async () => {
-    if (location.pathname === "/login" || location.pathname === "/register") {
-      return;
-    }
-
     try {
       const response = await mutateAsync();
       setAuthData({
@@ -72,10 +74,10 @@ function AuthProvider({ children }: AuthProviderProps) {
   };
 
   useEffect(() => {
-    refreshToken();
+    if (data.token) {
+      refreshToken();
+    }
   }, []);
-
-  
 
   const contextValue = useMemo(
     () => ({
