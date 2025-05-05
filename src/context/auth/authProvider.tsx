@@ -31,7 +31,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const { mutateAsync } = useRefreshToken();
 
   const [data, setData] = useState<IAuthState>(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("accessToken");
     const user = Cookies.get("user");
 
     if (!token || !user) {
@@ -46,7 +46,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   const setAuthData = useCallback(
     ({ token, user }: { token: string; user: IUser }) => {
-      Cookies.set("token", token, { expires: 7 }); // 7 dias
+      Cookies.set("accessToken", token, { expires: 0.5 }); // 12 hours
       Cookies.set("user", JSON.stringify(user), { expires: 7 });
       setAuthToken(token);
       setData({ token, user });
@@ -55,7 +55,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   );
 
   const removeAuthData = useCallback(() => {
-    Cookies.remove("token");
+    Cookies.remove("accessToken");
     Cookies.remove("user");
     setData({ token: null, user: null });
   }, []);
