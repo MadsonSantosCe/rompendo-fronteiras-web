@@ -73,12 +73,11 @@ export const useRefreshToken = () => {
       const data = await refreshTokenRequest();
       return data;
     },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        toast.error(`Erro: ${error.response?.data.message || error.message}`);
-      } else {
-        toast.error(`Unexpected error: ${error}`);
-      }
+    onError: () => {
+      removeAuthData();
     },
   });
 };
+function removeAuthData() {
+  throw new Error("Function not implemented.");
+}

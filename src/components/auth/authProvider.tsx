@@ -61,16 +61,11 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const refreshToken = async () => {
-    try {
       const response = await mutateAsync();
       setAuthData({
         token: response.token,
         user: response.user,
       });
-    } catch (err) {
-      console.log("Erro ao tentar restaurar sessão:", err);
-      removeAuthData();
-    }
   };
 
   useEffect(() => {
