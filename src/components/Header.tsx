@@ -19,7 +19,6 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-between px-4 py-2 bg-white shadow-sm">
-      {/* Logo + Menu */}
       <div className="flex items-center gap-4">
         <Menu className="w-5 h-5 cursor-pointer" />
         <h1 className="text-xl font-bold">
@@ -27,7 +26,6 @@ export default function Header() {
         </h1>
       </div>
 
-      {/* Search */}
       <div className="flex-1 mx-6 max-w-md">
         <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
           <svg
@@ -51,9 +49,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Right side */}
       <div className="flex items-center gap-6">
-        {/* Notification */}
         <div className="relative cursor-pointer">
           <Bell className="w-5 h-5 text-blue-500" />
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
@@ -61,7 +57,6 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer ml-2">
             <Avatar className="w-8 h-8">
