@@ -67,6 +67,7 @@ export const useSignOut = () => {
 };
 
 export const useRefreshToken = () => {
+  const { removeAuthData } = UseAuthentication();
   return useMutation({
     mutationKey: ["refreshToken"],
     mutationFn: async () => {
@@ -78,6 +79,3 @@ export const useRefreshToken = () => {
     },
   });
 };
-function removeAuthData() {
-  throw new Error("Function not implemented.");
-}
