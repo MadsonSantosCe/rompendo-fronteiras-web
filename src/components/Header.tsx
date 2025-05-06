@@ -23,7 +23,7 @@ export default function Header() {
       <div className="flex items-center gap-4">
         <Menu className="w-5 h-5 cursor-pointer" />
         <h1 className="text-xl font-bold">
-          <span className="text-blue-500">IMERF </span>Online
+          {/*<span className="text-blue-500">IMERF </span>Online*/}
         </h1>
       </div>
 

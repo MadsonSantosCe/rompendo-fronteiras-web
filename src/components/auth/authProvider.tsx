@@ -9,7 +9,7 @@ import {
 } from "react";
 import { IUser } from "@/types/authTypes";
 import { useRefreshToken } from "@/hooks/auth/useAuth";
-import { setAuthToken } from "@/services/api/api";
+import { setAuthorizationToken } from "@/services/api/api";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -48,7 +48,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     ({ token, user }: { token: string; user: IUser }) => {
       Cookies.set("accessToken", token, { expires: 0.5 }); // 12 hours
       Cookies.set("user", JSON.stringify(user), { expires: 7 });
-      setAuthToken(token);
+      setAuthorizationToken(token);
       setData({ token, user });
     },
     []

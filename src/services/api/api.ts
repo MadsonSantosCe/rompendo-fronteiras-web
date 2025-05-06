@@ -8,7 +8,7 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-export const setAuthToken = (token: string) => {
+export const setAuthorizationToken = (token: string) => {
   api.interceptors.request.use(
     (config) => {
       config.headers.set('authorization', `Bearer ${token}`);
