@@ -1,5 +1,12 @@
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FormInput } from "@/components/ui/form-input";
+import { useSignIn } from "@/hooks/auth/useAuth";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Card,
   CardContent,
@@ -8,23 +15,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormInput } from "@/components/ui/form-input";
-import { useSignIn } from "@/hooks/auth/useAuth";
-import { Link, useNavigate } from "react-router-dom";
+
+const LoginFormSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormData = z.infer<typeof LoginFormSchema>;
 
 export const Login = () => {
-  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(LoginFormSchema),
+  });
+
   const { mutateAsync, isPending, error } = useSignIn();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const email = "example@mail.com";
-    const password = "123456";
-
+  const handleFormSubmit = async (data: LoginFormData) => {
     try {
-      await mutateAsync({ email, password });
+      await mutateAsync(data);
       navigate("/");
     } catch (err) {
       console.error("Erro no login:", err);
@@ -47,21 +60,31 @@ export const Login = () => {
             <form className="space-y-4">
               <div className="space-y-2">
                 <FormInput
+                  {...register("email")}
                   id="email"
                   name="email"
                   placeholder="john.doe@gmail.com"
                   label="E-mail"
                   type="text"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <FormInput
+                  {...register("password")}
                   id="password"
                   name="password"
                   placeholder="insert your password"
                   label="Password"
                   type="password"
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center justify-between">
@@ -87,7 +110,7 @@ export const Login = () => {
               type="submit"
               disabled={isPending}
               className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-              onClick={handleSubmit}
+              onClick={handleSubmit(handleFormSubmit)}
             >
               Login
             </Button>

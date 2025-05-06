@@ -1,5 +1,11 @@
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
+import { FormInput } from "@/components/ui/form-input";
+import { useSignUp } from "@/hooks/auth/useAuth";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Card,
   CardContent,
@@ -8,28 +14,50 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FormInput } from "@/components/ui/form-input";
-import { useSignUp } from "@/hooks/auth/useAuth";
-import { Link, useNavigate } from "react-router-dom";
+
+const RegisterFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z
+    .string()
+    .min(6, "Confirm password must be at least 6 characters"),
+});
+
+type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
   const navigate = useNavigate();
   const { mutateAsync, isPending, error } = useSignUp();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    clearErrors,
+  } = useForm<RegisterForm>({
+    resolver: zodResolver(RegisterFormSchema),
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const name = "John Doe";
-    const email = "example@mail.com";
-    const password = "123456";
+  const handleFormSubmit = async (data: RegisterForm) => {
+    if (data.password !== data.confirmPassword) {
+      setError("confirmPassword", {
+        type: "manual",
+        message: "Passwords do not match",
+      });
+    } else {
+      clearErrors("confirmPassword");
+      console.log(data);
+    }
 
     try {
-      await mutateAsync({ name, email, password });
+      await mutateAsync(data);
       navigate("/");
     } catch (err) {
       console.error("Erro no login:", err);
     }
   };
+
   return (
     <AuthLayout>
       <div className="max-h-screen flex flex-col">
@@ -46,39 +74,59 @@ export const Register = () => {
             <form className="space-y-4">
               <div className="space-y-2">
                 <FormInput
+                  {...register("name")}
                   id="name"
                   name="name"
                   placeholder="John Doe"
                   label="Name"
                   type="text"
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-sm">{errors.name.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <FormInput
+                  {...register("email")}
                   id="email"
                   name="email"
                   placeholder="john.doe@gmail.com"
                   label="E-mail"
                   type="text"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <FormInput
+                  {...register("password")}
                   id="password"
                   name="password"
                   placeholder="insert your password"
                   label="Password"
                   type="password"
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <FormInput
+                  {...register("confirmPassword")}
                   id="confirmPassword"
                   name="confirmPassword"
                   placeholder="repeat your password"
                   label="Confirme Password"
                   type="password"
                 />
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
             </form>
           </CardContent>
@@ -87,7 +135,7 @@ export const Register = () => {
               type="submit"
               disabled={isPending}
               className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-              onClick={handleSubmit}
+              onClick={handleSubmit(handleFormSubmit)}
             >
               Register
             </Button>
@@ -102,7 +150,7 @@ export const Register = () => {
               </Link>
             </div>
             {error && (
-              <p className="text-red-500 text-sm">Erro ao autenticar</p>
+              <p className="text-red-500 text-sm">Erro ao registar usuário</p>
             )}
           </CardFooter>
         </Card>
