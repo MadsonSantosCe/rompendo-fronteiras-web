@@ -6,6 +6,8 @@ import {
 } from "@/services/auth/authServices";
 import { ISignInPayload, ISignUpPayload } from "@/types/authTypes";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
 
 export const useSignIn = () => {
   const { setAuthData } = UseAuthentication();
@@ -16,6 +18,13 @@ export const useSignIn = () => {
       const data = await signInRequest(payload);
       setAuthData(data);
       return data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(`Erro: ${error.response?.data.message || error.message}`);
+      } else {
+        toast.error(`Unexpected error: ${error}`);
+      }
     },
   });
 };
@@ -30,6 +39,13 @@ export const useSignUp = () => {
       setAuthData(data);
       return data;
     },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(`${error.response?.data.message || error.message}`);
+      } else {
+        toast.error(`Unexpected error: ${error}`);
+      }
+    },
   });
 };
 
@@ -40,6 +56,13 @@ export const useSignOut = () => {
     mutationFn: async () => {
       removeAuthData();
     },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(`${error.response?.data.message || error.message}`);
+      } else {
+        toast.error(`Unexpected error: ${error}`);
+      }
+    },
   });
 };
 
@@ -49,6 +72,13 @@ export const useRefreshToken = () => {
     mutationFn: async () => {
       const data = await refreshTokenRequest();
       return data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(`${error.response?.data.message || error.message}`);
+      } else {
+        toast.error(`Unexpected error: ${error}`);
+      }
     },
   });
 };

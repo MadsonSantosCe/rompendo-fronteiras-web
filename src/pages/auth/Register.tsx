@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 
 const RegisterFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -49,13 +50,9 @@ export const Register = () => {
       clearErrors("confirmPassword");
       console.log(data);
     }
-
-    try {
-      await mutateAsync(data);
-      navigate("/");
-    } catch (err) {
-      console.error("Erro no login:", err);
-    }
+    
+    await mutateAsync(data);
+    navigate("/");
   };
 
   return (
@@ -149,9 +146,7 @@ export const Register = () => {
                 Sign in
               </Link>
             </div>
-            {error && (
-              <p className="text-red-500 text-sm">Erro ao registar usuário</p>
-            )}
+            {error && toast("Authentication error: " + error.message)}
           </CardFooter>
         </Card>
       </div>

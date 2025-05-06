@@ -32,16 +32,12 @@ export const Login = () => {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  const { mutateAsync, isPending, error } = useSignIn();
+  const { mutateAsync, isPending } = useSignIn();
   const navigate = useNavigate();
 
   const handleFormSubmit = async (data: LoginFormData) => {
-    try {
       await mutateAsync(data);
       navigate("/");
-    } catch (err) {
-      console.error("Erro no login:", err);
-    }
   };
 
   return (
@@ -49,11 +45,9 @@ export const Login = () => {
       <div className="max-h-screen flex flex-col">
         <Card className="flex-1 flex items-center justify-center shadow-none border-none">
           <CardHeader className="w-full max-w-md">
-            <CardTitle className="text-3xl font-bold text-gray-900">
-              Login
-            </CardTitle>
+            <CardTitle className="text-3xl font-bold text-gray-900">Login</CardTitle>
             <CardDescription className="text-gray-500 text-sm">
-              Login to acess your account
+              Acess your account
             </CardDescription>
           </CardHeader>
           <CardContent className="w-full max-w-md">
@@ -124,9 +118,6 @@ export const Login = () => {
                 Sign up
               </Link>
             </div>
-            {error && (
-              <p className="text-red-500 text-sm">Erro ao autenticar</p>
-            )}
           </CardFooter>
         </Card>
       </div>
