@@ -8,10 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FormInput } from "@/components/ui/form-input";
 import { useSignUp } from "@/hooks/auth/useAuth";
-import { EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Register = () => {
@@ -47,68 +45,42 @@ export const Register = () => {
           <CardContent className="w-full max-w-md">
             <form className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">
-                  Full Name
-                </Label>
-                <Input
+                <FormInput
                   id="name"
-                  type="text"
+                  name="name"
                   placeholder="John Doe"
-                  className="w-full px-4 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  label="Name"
+                  type="text"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Email
-                </Label>
-                <Input
+                <FormInput
                   id="email"
-                  type="email"
-                  autoComplete="email"
+                  name="email"
                   placeholder="john.doe@gmail.com"
-                  className="w-full px-4 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  label="E-mail"
+                  type="text"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type="password"
-                    autoComplete="new-password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="********"
-                  />
-                  <Button
-                    type="button"
-                    disabled={false}
-                    className="absolute inset-y-0 right-1 flex items-center justify-center p-0 text-gray-500 bg-transparent hover:bg-transparent"
-                  >
-                    <EyeOff className="h-4 w-4" />
-                  </Button>
-                </div>
+                <FormInput
+                  id="password"
+                  name="password"
+                  placeholder="insert your password"
+                  label="Password"
+                  type="password"
+                />
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="********"
-                  />
-                  <Button
-                    type="button"
-                    disabled={false}
-                    className="absolute inset-y-0 right-1 flex items-center justify-center p-0 text-gray-500 bg-transparent hover:bg-transparent"
-                  >
-                    <EyeOff className="h-4 w-4" />
-                  </Button>
-                </div>
+                <FormInput
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="repeat your password"
+                  label="Confirme Password"
+                  type="password"
+                />
               </div>
-              </form>
+            </form>
           </CardContent>
           <CardFooter className="flex justify-between w-full max-w-md flex-col">
             <Button

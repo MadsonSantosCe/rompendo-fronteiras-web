@@ -9,10 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FormInput } from "@/components/ui/form-input";
 import { useSignIn } from "@/hooks/auth/useAuth";
-import { EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
@@ -48,47 +46,32 @@ export const Login = () => {
           <CardContent className="w-full max-w-md">
             <form className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Email
-                </Label>
-                <Input
+                <FormInput
                   id="email"
-                  type="email"
+                  name="email"
                   placeholder="john.doe@gmail.com"
-                  className="w-full px-4 py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  label="E-mail"
+                  type="text"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type="password"
-                    autoComplete="current-password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="********"
-                  />
-                  <Button
-                    type="button"
-                    disabled={false}
-                    className="absolute inset-y-0 right-1 flex items-center justify-center p-0 text-gray-500 bg-transparent hover:bg-transparent"
-                  >
-                    <EyeOff className="h-5 w-5" />
-                  </Button>
-                </div>
+                <FormInput
+                  id="password"
+                  name="password"
+                  placeholder="insert your password"
+                  label="Password"
+                  type="password"
+                />
               </div>
 
               <div className="flex items-center justify-between">
-                <Label
-                  htmlFor="remember"
-                  className="flex items-center space-x-2 text-sm"
-                >
+                <span className="flex items-center space-x-2 text-sm">
                   <Checkbox
                     id="remember"
                     className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                   />
                   <span className="text-gray-500">Remember me</span>
-                </Label>
+                </span>
 
                 <Link
                   to="/forgot-password"
