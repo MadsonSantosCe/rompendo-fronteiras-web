@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -96,30 +97,31 @@ export const Login = () => {
                   Forgot Password
                 </Link>
               </div>
-
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
-                onClick={handleSubmit}
-              >
-                Login
-              </Button>
-
-              <div className="text-center text-sm text-gray-600">
-                <span>Don't have an account? </span>
-                <Link
-                  to="/register"
-                  className="text-red-400 hover:text-red-500 font-medium"
-                >
-                  Sign up
-                </Link>
-              </div>
-              {error && (
-                <p className="text-red-500 text-sm">Erro ao autenticar</p>
-              )}
             </form>
           </CardContent>
+          <CardFooter className="flex justify-between w-full max-w-md flex-col">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+              onClick={handleSubmit}
+            >
+              Login
+            </Button>
+
+            <div className="text-center text-sm text-gray-600 mt-2">
+              <span>Don't have an account? </span>
+              <Link
+                to="/register"
+                className="text-red-400 hover:text-red-500 font-medium"
+              >
+                Sign up
+              </Link>
+            </div>
+            {error && (
+              <p className="text-red-500 text-sm">Erro ao autenticar</p>
+            )}
+          </CardFooter>
         </Card>
       </div>
     </AuthLayout>
