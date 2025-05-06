@@ -41,7 +41,7 @@ export const useSignUp = () => {
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
-        toast.error(`${error.response?.data.message || error.message}`);
+        toast.error(`Erro: ${error.response?.data.message || error.message}`);
       } else {
         toast.error(`Unexpected error: ${error}`);
       }
@@ -58,7 +58,7 @@ export const useSignOut = () => {
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
-        toast.error(`${error.response?.data.message || error.message}`);
+        toast.error(`Erro: ${error.response?.data.message || error.message}`);
       } else {
         toast.error(`Unexpected error: ${error}`);
       }
@@ -75,7 +75,7 @@ export const useRefreshToken = () => {
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
-        toast.error(`${error.response?.data.message || error.message}`);
+        toast.error(`Erro: ${error.response?.data.message || error.message}`);
       } else {
         toast.error(`Unexpected error: ${error}`);
       }

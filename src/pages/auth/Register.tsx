@@ -14,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { toast } from "sonner";
 
 const RegisterFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -29,7 +28,7 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
   const navigate = useNavigate();
-  const { mutateAsync, isPending, error } = useSignUp();
+  const { mutateAsync, isPending} = useSignUp();
   const {
     register,
     handleSubmit,
@@ -146,7 +145,6 @@ export const Register = () => {
                 Sign in
               </Link>
             </div>
-            {error && toast("Authentication error: " + error.message)}
           </CardFooter>
         </Card>
       </div>
