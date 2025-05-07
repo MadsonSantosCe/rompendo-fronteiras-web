@@ -50,8 +50,8 @@ export const Register = () => {
 
   return (
     <AuthLayout>
-      <div className="flex items-center justify-center">
-        <Card className="w-full max-w-md rounded">
+      <div className="flex items-center justify-center bg-card shadow-sm rounded-lg">
+        <Card className="w-full max-w-md m-4 border-none shadow-none">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-semibold">Register</CardTitle>
             <CardDescription className="text-sm text-gray-500">
