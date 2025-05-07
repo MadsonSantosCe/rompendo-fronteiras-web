@@ -70,7 +70,6 @@ export const Register = () => {
                 <FormInput
                   {...register("name")}
                   id="name"
-                  name="name"
                   placeholder="John Doe"
                   label="Name"
                   type="text"
@@ -83,7 +82,6 @@ export const Register = () => {
                 <FormInput
                   {...register("email")}
                   id="email"
-                  name="email"
                   placeholder="john.doe@gmail.com"
                   label="E-mail"
                   type="text"
@@ -96,7 +94,6 @@ export const Register = () => {
                 <FormInput
                   {...register("password")}
                   id="password"
-                  name="password"
                   placeholder="Insert your password"
                   label="Password"
                   type="password"
@@ -109,7 +106,6 @@ export const Register = () => {
                 <FormInput
                   {...register("confirmPassword")}
                   id="confirmPassword"
-                  name="confirmPassword"
                   placeholder="Repeat your password"
                   label="Confirm Password"
                   type="password"
@@ -124,7 +120,7 @@ export const Register = () => {
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full h-10 cursor-pointer text-white rounded-md"
+              className="w-70 h-10 cursor-pointer text-white rounded-md"
               onClick={handleSubmit(handleFormSubmit)}
             >
               Register
@@ -136,7 +132,7 @@ export const Register = () => {
                 to="/login"
                 className="text-primary hover:underline font-medium"
               >
-                Sign in
+                Sign Up
               </Link>
             </div>
           </CardFooter>

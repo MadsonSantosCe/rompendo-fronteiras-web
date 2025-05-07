@@ -7,7 +7,6 @@ import { useState, forwardRef } from "react";
 
 type FormInputProps = {
   id?: string;
-  name?: string;
   placeholder?: string;
   label?: string;
   type?: "text" | "password";
@@ -16,7 +15,7 @@ type FormInputProps = {
 };
 
 export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
-  ({ id, name, placeholder, label, type, value, onChange }: FormInputProps, ref) => {
+  ({ id, placeholder, label, type, value, onChange }: FormInputProps, ref) => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -31,7 +30,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
             <input
               ref={ref}
               id={id}
-              name={name}
+              name={id}
               type={!showPassword ? type : "text"}
               placeholder={placeholder}
               value={value}
