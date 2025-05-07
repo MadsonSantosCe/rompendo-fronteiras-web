@@ -42,8 +42,8 @@ export const Login = () => {
 
   return (
     <AuthLayout>
-      <div className="max-h-screen flex items-center justify-center bg-gray-100">
-        <Card className="w-full max-w-sm m-4 p-4 shadow-lg rounded-lg bg-white">
+      <div className="max-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md rounded-lg ">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-semibold">Login</CardTitle>
             <CardDescription className="text-sm text-gray-500">
@@ -51,7 +51,7 @@ export const Login = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-2">
             <form className="space-y-4">
               <div className="space-y-2">
                 <FormInput
@@ -110,7 +110,7 @@ export const Login = () => {
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full h-10"
+              className="text-white w-full h-10"
               onClick={handleSubmit(handleFormSubmit)}
             >
               Sign In
