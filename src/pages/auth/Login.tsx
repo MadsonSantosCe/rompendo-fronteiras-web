@@ -36,18 +36,18 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const handleFormSubmit = async (data: LoginFormData) => {
-      await mutateAsync(data);
-      navigate("/");
+    await mutateAsync(data);
+    navigate("/");
   };
 
   return (
     <AuthLayout>
       <div className="max-h-screen flex flex-col">
-        <Card className="flex-1 flex items-center justify-center shadow-none border-none">
+        <Card className="flex-1 flex items-center justify-center shadow-none border-none bg-card text-foreground">
           <CardHeader className="w-full max-w-md">
-            <CardTitle className="text-3xl font-bold text-gray-900">Login</CardTitle>
-            <CardDescription className="text-gray-500 text-sm">
-              Acess your account
+            <CardTitle className="text-3xl font-bold">Login</CardTitle>
+            <CardDescription>
+              Access your account
             </CardDescription>
           </CardHeader>
           <CardContent className="w-full max-w-md">
@@ -62,7 +62,7 @@ export const Login = () => {
                   type="text"
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                  <p className="text-destructive text-sm">{errors.email.message}</p>
                 )}
               </div>
               <div className="space-y-2">
@@ -70,29 +70,24 @@ export const Login = () => {
                   {...register("password")}
                   id="password"
                   name="password"
-                  placeholder="insert your password"
+                  placeholder="Insert your password"
                   label="Password"
                   type="password"
                 />
                 {errors.password && (
-                  <p className="text-red-500 text-sm">
-                    {errors.password.message}
-                  </p>
+                  <p className="text-destructive text-sm">{errors.password.message}</p>
                 )}
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="flex items-center space-x-2 text-sm">
-                  <Checkbox
-                    id="remember"
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded"
-                  />
-                  <span className="text-gray-500">Remember me</span>
+                  <Checkbox id="remember" />
+                  <span className="text-muted-foreground">Remember me</span>
                 </span>
 
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-red-400 hover:text-red-500 font-medium"
+                  className="text-sm text-red-400 hover:underline font-medium"
                 >
                   Forgot Password
                 </Link>
@@ -103,17 +98,17 @@ export const Login = () => {
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+              className="w-full h-10 text-white cursor-pointer rounded-md"
               onClick={handleSubmit(handleFormSubmit)}
             >
               Login
             </Button>
 
-            <div className="text-center text-sm text-gray-600 mt-2">
+            <div className="text-center text-sm text-muted-foreground mt-4">
               <span>Don't have an account? </span>
               <Link
                 to="/register"
-                className="text-red-400 hover:text-red-500 font-medium"
+                className="text-primary hover:underline font-medium"
               >
                 Sign up
               </Link>

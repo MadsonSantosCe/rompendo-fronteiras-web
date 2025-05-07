@@ -28,7 +28,8 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
   const navigate = useNavigate();
-  const { mutateAsync, isPending} = useSignUp();
+  const { mutateAsync, isPending } = useSignUp();
+
   const {
     register,
     handleSubmit,
@@ -45,11 +46,10 @@ export const Register = () => {
         type: "manual",
         message: "Passwords do not match",
       });
-    } else {
-      clearErrors("confirmPassword");
-      console.log(data);
+      return;
     }
-    
+
+    clearErrors("confirmPassword");
     await mutateAsync(data);
     navigate("/");
   };
@@ -57,12 +57,10 @@ export const Register = () => {
   return (
     <AuthLayout>
       <div className="max-h-screen flex flex-col">
-        <Card className="flex-1 flex items-center justify-center shadow-none border-none">
+        <Card className="flex-1 flex items-center justify-center shadow-none border-none bg-card text-foreground">
           <CardHeader className="w-full max-w-md">
-            <CardTitle className="text-3xl font-bold text-gray-900">
-              Sign up
-            </CardTitle>
-            <CardDescription className="text-gray-500 text-sm">
+            <CardTitle className="text-3xl font-bold">Sign up</CardTitle>
+            <CardDescription>
               Create your account
             </CardDescription>
           </CardHeader>
@@ -78,7 +76,7 @@ export const Register = () => {
                   type="text"
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-sm">{errors.name.message}</p>
+                  <p className="text-destructive text-sm">{errors.name.message}</p>
                 )}
               </div>
               <div className="space-y-2">
@@ -91,7 +89,7 @@ export const Register = () => {
                   type="text"
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                  <p className="text-destructive text-sm">{errors.email.message}</p>
                 )}
               </div>
               <div className="space-y-2">
@@ -99,14 +97,12 @@ export const Register = () => {
                   {...register("password")}
                   id="password"
                   name="password"
-                  placeholder="insert your password"
+                  placeholder="Insert your password"
                   label="Password"
                   type="password"
                 />
                 {errors.password && (
-                  <p className="text-red-500 text-sm">
-                    {errors.password.message}
-                  </p>
+                  <p className="text-destructive text-sm">{errors.password.message}</p>
                 )}
               </div>
               <div className="space-y-2">
@@ -114,14 +110,12 @@ export const Register = () => {
                   {...register("confirmPassword")}
                   id="confirmPassword"
                   name="confirmPassword"
-                  placeholder="repeat your password"
-                  label="Confirme Password"
+                  placeholder="Repeat your password"
+                  label="Confirm Password"
                   type="password"
                 />
                 {errors.confirmPassword && (
-                  <p className="text-red-500 text-sm">
-                    {errors.confirmPassword.message}
-                  </p>
+                  <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>
                 )}
               </div>
             </form>
@@ -130,17 +124,17 @@ export const Register = () => {
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+              className="w-full h-10 cursor-pointer text-white rounded-md"
               onClick={handleSubmit(handleFormSubmit)}
             >
               Register
             </Button>
 
-            <div className="text-center text-sm text-gray-600 mt-2">
+            <div className="text-center text-sm text-muted-foreground mt-4">
               <span>Already have an account? </span>
               <Link
                 to="/login"
-                className="text-red-400 hover:text-red-500 font-medium"
+                className="text-primary hover:underline font-medium"
               >
                 Sign in
               </Link>
