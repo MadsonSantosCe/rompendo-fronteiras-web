@@ -15,14 +15,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const RegisterFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z
-    .string()
-    .min(6, "Confirm password must be at least 6 characters"),
-});
+const RegisterFormSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm password must be at least 6 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
@@ -34,37 +39,25 @@ export const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
-    clearErrors,
   } = useForm<RegisterForm>({
     resolver: zodResolver(RegisterFormSchema),
   });
 
   const handleFormSubmit = async (data: RegisterForm) => {
-    if (data.password !== data.confirmPassword) {
-      setError("confirmPassword", {
-        type: "manual",
-        message: "Passwords do not match",
-      });
-      return;
-    }
-
-    clearErrors("confirmPassword");
     await mutateAsync(data);
     navigate("/");
   };
 
   return (
     <AuthLayout>
-      <div className="max-h-screen flex flex-col">
-        <Card className="flex-1 flex items-center justify-center shadow-none border-none bg-card text-foreground">
-          <CardHeader className="w-full max-w-md">
+      <div className="max-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md p-8">
+          <CardHeader className="space-y-1">
             <CardTitle className="text-3xl font-bold">Sign up</CardTitle>
-            <CardDescription>
-              Create your account
-            </CardDescription>
+            <CardDescription>Create your account</CardDescription>
           </CardHeader>
-          <CardContent className="w-full max-w-md">
+
+          <CardContent className="space-y-4">
             <form className="space-y-4">
               <div className="space-y-2">
                 <FormInput
@@ -75,9 +68,12 @@ export const Register = () => {
                   type="text"
                 />
                 {errors.name && (
-                  <p className="text-destructive text-sm">{errors.name.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.name.message}
+                  </p>
                 )}
               </div>
+
               <div className="space-y-2">
                 <FormInput
                   {...register("email")}
@@ -87,9 +83,12 @@ export const Register = () => {
                   type="text"
                 />
                 {errors.email && (
-                  <p className="text-destructive text-sm">{errors.email.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
+
               <div className="space-y-2">
                 <FormInput
                   {...register("password")}
@@ -99,9 +98,12 @@ export const Register = () => {
                   type="password"
                 />
                 {errors.password && (
-                  <p className="text-destructive text-sm">{errors.password.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
+
               <div className="space-y-2">
                 <FormInput
                   {...register("confirmPassword")}
@@ -111,28 +113,31 @@ export const Register = () => {
                   type="password"
                 />
                 {errors.confirmPassword && (
-                  <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.confirmPassword.message}
+                  </p>
                 )}
               </div>
+
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full h-10"
+                onClick={handleSubmit(handleFormSubmit)}
+              >
+                Register
+              </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-between w-full max-w-md flex-col">
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="w-70 h-10 cursor-pointer text-white rounded-md"
-              onClick={handleSubmit(handleFormSubmit)}
-            >
-              Register
-            </Button>
 
-            <div className="text-center text-sm text-muted-foreground mt-4">
+          <CardFooter className="flex justify-center">
+            <div className="text-center text-sm text-muted-foreground">
               <span>Already have an account? </span>
               <Link
                 to="/login"
                 className="text-primary hover:underline font-medium"
               >
-                Sign Up
+                Sign in
               </Link>
             </div>
           </CardFooter>

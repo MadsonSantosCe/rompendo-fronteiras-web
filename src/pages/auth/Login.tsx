@@ -42,13 +42,14 @@ export const Login = () => {
 
   return (
     <AuthLayout>
-      <div className="max-h-screen flex flex-col">
-        <Card className="flex-1 flex items-center justify-center shadow-none border-none bg-card text-foreground">
-          <CardHeader className="w-full max-w-md">
+      <div className="max-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md p-8">
+          <CardHeader className="space-y-1">
             <CardTitle className="text-3xl font-bold">Login</CardTitle>
             <CardDescription>Access your account</CardDescription>
           </CardHeader>
-          <CardContent className="w-full max-w-md">
+
+          <CardContent className="space-y-4">
             <form className="space-y-4">
               <div className="space-y-2">
                 <FormInput
@@ -64,6 +65,7 @@ export const Login = () => {
                   </p>
                 )}
               </div>
+
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <label htmlFor="password" className="text-sm font-medium">
@@ -71,18 +73,20 @@ export const Login = () => {
                   </label>
                   <Link
                     to="/forgot-password"
-                    className="text-sm text-muted-foreground hover:underline font-medium"
+                    className="text-sm text-muted-foreground hover:underline"
                   >
                     Forgot Password?
                   </Link>
                 </div>
 
-                <FormInput
-                  {...register("password")}
-                  id="password"
-                  placeholder="Insert your password"
-                  type="password"
-                />
+                
+                  <FormInput
+                    {...register("password")}
+                    id="password"
+                    placeholder="Insert your password"
+                    type="password"
+                  />
+                
 
                 {errors.password && (
                   <p className="text-destructive text-sm">
@@ -92,24 +96,25 @@ export const Login = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="flex items-center space-x-2 text-sm">
+                <label className="flex items-center space-x-2 text-sm cursor-pointer">
                   <Checkbox id="remember" />
                   <span className="text-muted-foreground">Remember Password</span>
-                </span>
+                </label>
               </div>
             </form>
           </CardContent>
-          <CardFooter className="flex justify-between w-full max-w-md flex-col">
+
+          <CardFooter className="flex flex-col gap-4">
             <Button
               type="submit"
               disabled={isPending}
-              className="w-70 h-10 text-white cursor-pointer rounded-md"
+              className="w-full h-10"
               onClick={handleSubmit(handleFormSubmit)}
             >
               Sign In
             </Button>
 
-            <div className="text-center text-sm text-muted-foreground mt-4">
+            <div className="text-center text-sm text-muted-foreground">
               <span>Don't have an account? </span>
               <Link
                 to="/register"
