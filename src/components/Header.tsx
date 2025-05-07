@@ -29,7 +29,7 @@ export default function Header() {
         </h1>
       </div>
 
-      <div className="flex-1 mx-6 max-w-md">
+      <div className="flex-1 mx-6 max-w-md hidden sm:block">
         <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2">
           <svg
             className="w-5 h-5 text-gray-400 dark:text-gray-300"
@@ -53,7 +53,7 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="relative cursor-pointer">
+        <div className="relative cursor-pointer hidden sm:block">
           <Bell className="w-5 h-5 text-blue-500 dark:text-blue-400" />
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
             6
@@ -77,7 +77,7 @@ export default function Header() {
                 Admin
               </div>
             </div>
-            <div className="w-6 h-6 ml-2 flex items-center justify-center rounded-full border-1 border-gray-300 dark:border-gray-700">
+            <div className="w-6 h-6 ml-2 flex items-center justify-center rounded-full border-1 border-gray-300 dark:border-gray-700 sm:ml-0">
               <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-300" />
             </div>
           </DropdownMenuTrigger>
