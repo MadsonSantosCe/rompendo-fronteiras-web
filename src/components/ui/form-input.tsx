@@ -35,7 +35,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
               placeholder={placeholder}
               value={value}
               onChange={onChange}
-              className="flex-1 outline-none bg-transparent h-full px-4"
+              className="flex-1 outline-none bg-transparent w-full h-full px-4"
             />
           </div>
           {type === "password" && (

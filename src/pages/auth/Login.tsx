@@ -42,11 +42,13 @@ export const Login = () => {
 
   return (
     <AuthLayout>
-      <div className="max-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md p-8">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-3xl font-bold">Login</CardTitle>
-            <CardDescription>Access your account</CardDescription>
+      <div className="max-h-screen flex items-center justify-center bg-gray-100">
+        <Card className="w-full max-w-sm m-4 p-4 shadow-lg rounded-lg bg-white">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-semibold">Login</CardTitle>
+            <CardDescription className="text-sm text-gray-500">
+              Access your account
+            </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
@@ -55,7 +57,7 @@ export const Login = () => {
                 <FormInput
                   {...register("email")}
                   id="email"
-                  placeholder="john.doe@gmail.com"
+                  placeholder="Insert your e-mail"
                   label="E-mail"
                   type="text"
                 />
