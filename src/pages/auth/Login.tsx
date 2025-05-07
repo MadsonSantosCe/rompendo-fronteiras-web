@@ -42,8 +42,8 @@ export const Login = () => {
 
   return (
     <AuthLayout>
-      <div className="max-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md rounded-lg ">
+      <div className="flex items-center justify-center">
+        <Card className="w-full max-w-md rounded">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-semibold">Login</CardTitle>
             <CardDescription className="text-sm text-gray-500">
@@ -51,7 +51,7 @@ export const Login = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-2">
+          <CardContent>
             <form className="space-y-4">
               <div className="space-y-2">
                 <FormInput
