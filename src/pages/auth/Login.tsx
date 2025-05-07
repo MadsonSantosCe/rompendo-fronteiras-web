@@ -17,8 +17,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 
 const LoginFormSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().email("Formato de e-mail inválido."),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
 });
 
 type LoginFormData = z.infer<typeof LoginFormSchema>;
@@ -42,27 +42,31 @@ export const Login = () => {
 
   return (
     <AuthLayout>
-      <div className="flex items-center justify-center bg-card shadow-sm rounded-lg">
-        <Card className="w-full max-w-md m-4 border-none shadow-none">
+      <div className="flex items-center justify-center w-full px-4">
+        <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-semibold">Login</CardTitle>
-            <CardDescription className="text-sm text-gray-500">
-              Access your account
-            </CardDescription>
+            <CardTitle className="text-xl">Bem-vindo de Volta!</CardTitle>
+            <CardDescription>Acesse sua conta para continuar.</CardDescription>
           </CardHeader>
 
           <CardContent>
-            <form className="space-y-4">
+            <form className="space-y-6">
               <div className="space-y-2">
+              <label
+                    htmlFor="email"
+                    className="text-sm font-medium text-slate-400"
+                  >
+                    E-mail
+                  </label>
                 <FormInput
                   {...register("email")}
                   id="email"
-                  placeholder="Insert your e-mail"
-                  label="E-mail"
-                  type="text"
+                  placeholder="seuemail@exemplo.com"
+                  type="email"
                 />
+                {/* Display email validation error */}
                 {errors.email && (
-                  <p className="text-destructive text-sm">
+                  <p className="text-red-400 text-xs italic pt-1">
                     {errors.email.message}
                   </p>
                 )}
@@ -70,28 +74,28 @@ export const Login = () => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <label htmlFor="password" className="text-sm font-medium">
-                    Password
+                  <label
+                    htmlFor="password"
+                    className="text-sm font-medium text-slate-400"
+                  >
+                    Senha
                   </label>
                   <Link
                     to="/forgot-password"
-                    className="text-sm text-muted-foreground hover:underline"
+                    className="text-xs text-primary hover:underline"
                   >
-                    Forgot Password?
+                    Esqueceu a senha?
                   </Link>
                 </div>
-
-                
-                  <FormInput
-                    {...register("password")}
-                    id="password"
-                    placeholder="Insert your password"
-                    type="password"
-                  />
-                
-
+                <FormInput
+                  {...register("password")}
+                  id="password"
+                  placeholder="••••••••"
+                  type="password"
+                />
+                {/* Display password validation error */}
                 {errors.password && (
-                  <p className="text-destructive text-sm">
+                  <p className="text-red-400 text-xs italic pt-1">
                     {errors.password.message}
                   </p>
                 )}
@@ -100,29 +104,29 @@ export const Login = () => {
               <div className="flex items-center justify-between">
                 <label className="flex items-center space-x-2 text-sm cursor-pointer">
                   <Checkbox id="remember" />
-                  <span className="text-muted-foreground">Remember Password</span>
+                  <span className="text-slate-400 select-none">Lembrar-me</span>
                 </label>
               </div>
+
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="text-white w-full h-10"
+                onClick={handleSubmit(handleFormSubmit)}
+              >
+                {isPending ? "Entrando..." : "Entrar"}
+              </Button>
             </form>
           </CardContent>
 
           <CardFooter className="flex flex-col gap-4">
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="text-white w-full h-10"
-              onClick={handleSubmit(handleFormSubmit)}
-            >
-              Sign In
-            </Button>
-
-            <div className="text-center text-sm text-muted-foreground">
-              <span>Don't have an account? </span>
+            <div className="text-center text-sm text-slate-400">
+              <span>Não tem uma conta? </span>
               <Link
                 to="/register"
-                className="text-primary hover:underline font-medium"
+                className="font-semibold text-primary hover:underline"
               >
-                Sign up
+                Cadastre-se
               </Link>
             </div>
           </CardFooter>

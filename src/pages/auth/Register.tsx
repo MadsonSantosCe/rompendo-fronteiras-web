@@ -17,15 +17,15 @@ import {
 
 const RegisterFormSchema = z
   .object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    name: z.string().min(1, "O nome é obrigatório."),
+    email: z.string().email("Formato de e-mail inválido."),
+    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
     confirmPassword: z
       .string()
-      .min(6, "Confirm password must be at least 6 characters"),
+      .min(6, "A confirmação da senha deve ter pelo menos 6 caracteres."),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "As senhas não coincidem.",
     path: ["confirmPassword"],
   });
 
@@ -50,72 +50,90 @@ export const Register = () => {
 
   return (
     <AuthLayout>
-      <div className="flex items-center justify-center bg-card shadow-sm rounded-lg">
-        <Card className="w-full max-w-md m-4 border-none shadow-none">
+      <div className="flex items-center justify-center w-full px-4">
+        <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-semibold">Register</CardTitle>
-            <CardDescription className="text-sm text-gray-500">
-            Create your account
-            </CardDescription>
+            <CardTitle className="text-xl">Crie sua Conta</CardTitle>
+            <CardDescription>Junte-se a nós! É rápido e fácil.</CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4">
-            <form className="space-y-4">
+          <CardContent>
+            <form className="space-y-6">
               <div className="space-y-2">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-slate-400"
+                >
+                  Nome
+                </label>
                 <FormInput
                   {...register("name")}
                   id="name"
-                  placeholder="John Doe"
-                  label="Name"
+                  placeholder="Seu nome completo"
                   type="text"
                 />
                 {errors.name && (
-                  <p className="text-destructive text-sm">
+                  <p className="text-red-400 text-xs italic pt-1">
                     {errors.name.message}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-slate-400"
+                >
+                  E-mail
+                </label>
                 <FormInput
                   {...register("email")}
                   id="email"
-                  placeholder="john.doe@gmail.com"
-                  label="E-mail"
-                  type="text"
+                  placeholder="seuemail@exemplo.com"
+                  type="email"
                 />
                 {errors.email && (
-                  <p className="text-destructive text-sm">
+                  <p className="text-red-400 text-xs italic pt-1">
                     {errors.email.message}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-slate-400"
+                >
+                  Senha
+                </label>
                 <FormInput
                   {...register("password")}
                   id="password"
-                  placeholder="Insert your password"
-                  label="Password"
+                  placeholder="••••••••"
                   type="password"
                 />
                 {errors.password && (
-                  <p className="text-destructive text-sm">
+                  <p className="text-red-400 text-xs italic pt-1">
                     {errors.password.message}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-slate-400"
+                >
+                  Confirmar Senha
+                </label>
                 <FormInput
                   {...register("confirmPassword")}
                   id="confirmPassword"
-                  placeholder="Repeat your password"
-                  label="Confirm Password"
+                  placeholder="••••••••"
                   type="password"
                 />
                 {errors.confirmPassword && (
-                  <p className="text-destructive text-sm">
+                  <p className="text-red-400 text-xs italic pt-1">
                     {errors.confirmPassword.message}
                   </p>
                 )}
@@ -127,19 +145,19 @@ export const Register = () => {
                 className="text-white w-full h-10"
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                Register
+                {isPending ? "Registrando..." : "Registrar"}
               </Button>
             </form>
           </CardContent>
 
           <CardFooter className="flex justify-center">
-            <div className="text-center text-sm text-muted-foreground">
-              <span>Already have an account? </span>
+            <div className="text-center text-sm text-slate-400">
+              <span>Já tem uma conta? </span>
               <Link
                 to="/login"
-                className="text-primary hover:underline font-medium"
+                className="font-semibold text-primary hover:underline"
               >
-                Sign in
+                Entrar
               </Link>
             </div>
           </CardFooter>
