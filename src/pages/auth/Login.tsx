@@ -45,11 +45,11 @@ export const Login = () => {
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl">Bem-vindo de Volta!</CardTitle>
+            <CardTitle className="text-3xl font-bold text-slate-600 flex items-center justify-center gap-2 dark:text-white">Bem-vindo de Volta!</CardTitle>
             <CardDescription>Acesse sua conta para continuar.</CardDescription>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="p-6 sm:p-8">
             <form className="space-y-6">
               <div className="space-y-2">
               <label
@@ -64,7 +64,7 @@ export const Login = () => {
                   placeholder="seuemail@exemplo.com"
                   type="email"
                 />
-                {/* Display email validation error */}
+                
                 {errors.email && (
                   <p className="text-red-400 text-xs italic pt-1">
                     {errors.email.message}
@@ -93,7 +93,7 @@ export const Login = () => {
                   placeholder="••••••••"
                   type="password"
                 />
-                {/* Display password validation error */}
+                
                 {errors.password && (
                   <p className="text-red-400 text-xs italic pt-1">
                     {errors.password.message}

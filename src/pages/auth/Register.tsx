@@ -53,11 +53,11 @@ export const Register = () => {
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl">Crie sua Conta</CardTitle>
+            <CardTitle className="text-3xl font-bold text-slate-600 flex items-center justify-center gap-2 dark:text-white">Crie sua Conta</CardTitle>
             <CardDescription>Junte-se a nós! É rápido e fácil.</CardDescription>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="p-6 sm:p-8">
             <form className="space-y-6">
               <div className="space-y-2">
                 <label
