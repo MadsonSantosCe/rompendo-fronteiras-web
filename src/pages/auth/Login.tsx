@@ -1,7 +1,6 @@
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
-import { useSignIn } from "@/hooks/auth/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuthStore } from "@/lib/zustand/authStore";
 
 const LoginFormSchema = z.object({
   email: z.string().email("Formato de e-mail inválido."),
@@ -32,11 +32,11 @@ export const Login = () => {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  const { mutateAsync, isPending } = useSignIn();
+  const {signIn, isLoading} = useAuthStore();
   const navigate = useNavigate();
 
-  const handleFormSubmit = async (data: LoginFormData) => {
-    await mutateAsync(data);
+  const handleFormSubmit = async ({email, password}: LoginFormData) => {
+    await signIn(email, password);
     navigate("/");
   };
 
@@ -45,7 +45,7 @@ export const Login = () => {
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold text-slate-600 flex items-center justify-center gap-2 dark:text-white">Bem-vindo de Volta!</CardTitle>
+            <CardTitle className="text-3xl font-bold text-slate-700 flex items-center justify-center gap-2 dark:text-white">Bem-vindo de Volta!</CardTitle>
             <CardDescription>Acesse sua conta para continuar.</CardDescription>
           </CardHeader>
 
@@ -110,11 +110,11 @@ export const Login = () => {
 
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isLoading}
                 className="text-white w-full h-10"
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                {isPending ? "Entrando..." : "Entrar"}
+                {isLoading ? "Entrando..." : "Entrar"}
               </Button>
             </form>
           </CardContent>

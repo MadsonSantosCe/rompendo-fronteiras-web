@@ -1,7 +1,6 @@
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
-import { useSignUp } from "@/hooks/auth/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuthStore } from "@/lib/zustand/authStore";
 
 const RegisterFormSchema = z
   .object({
@@ -33,7 +33,7 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
   const navigate = useNavigate();
-  const { mutateAsync, isPending } = useSignUp();
+  const {signup, isLoading} = useAuthStore();
 
   const {
     register,
@@ -43,8 +43,8 @@ export const Register = () => {
     resolver: zodResolver(RegisterFormSchema),
   });
 
-  const handleFormSubmit = async (data: RegisterForm) => {
-    await mutateAsync(data);
+  const handleFormSubmit = async ({name, email, password}: RegisterForm) => {
+    await signup(email, password, name);
     navigate("/");
   };
 
@@ -53,7 +53,7 @@ export const Register = () => {
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold text-slate-600 flex items-center justify-center gap-2 dark:text-white">Crie sua Conta</CardTitle>
+            <CardTitle className="text-3xl font-bold text-slate-700 flex items-center justify-center gap-2 dark:text-white">Crie sua Conta</CardTitle>
             <CardDescription>Junte-se a nós! É rápido e fácil.</CardDescription>
           </CardHeader>
 
@@ -141,11 +141,11 @@ export const Register = () => {
 
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isLoading}
                 className="text-white w-full h-10"
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                {isPending ? "Registrando..." : "Registrar"}
+                {isLoading ? "Registrando..." : "Registrar"}
               </Button>
             </form>
           </CardContent>

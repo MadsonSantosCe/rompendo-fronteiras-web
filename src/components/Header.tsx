@@ -7,16 +7,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
-import { useSignOut } from "@/hooks/auth/useAuth";
-import { UseAuthentication } from "./auth/authProvider";
+import { useAuthStore } from "@/lib/zustand/authStore";
 
 export default function Header() {
-  const { mutateAsync } = useSignOut();
   const navigate = useNavigate();
-  const { user } = UseAuthentication();
+  const {signOut, user} = useAuthStore();
 
   const handleSignOut = () => {
-    mutateAsync();
+    signOut();
     navigate("/login");
   };
 
