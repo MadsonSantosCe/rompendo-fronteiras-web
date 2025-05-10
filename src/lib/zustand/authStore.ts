@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { refreshTokenRequest, signInRequest, signOutRequest, signUpRequest } from "@/services/auth/authServices";
+import { refreshTokenRequest, signInRequest, signOutRequest, signUpRequest, verifyEmailRequest } from "@/services/auth/authServices";
 import { create } from "zustand";
 import { toast } from "sonner";
 import { removeAccessToken, saveAccessToken } from "../utils";
@@ -43,8 +43,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 	signup: async (email, password, name) => {
 		set({ isLoading: true, error: null, message: null });
 		try {
-			const response = await signUpRequest({ email, password, name }) ;
-			saveAccessToken(response.token);
+			const response = await signUpRequest({ email, password, name });
 			set({ user: response.user, isAuthenticated: true, isLoading: false });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
@@ -99,8 +98,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
 	verifyEmail: async (code) => {
 		set({ isLoading: true, error: null, message: null });
 		try {
-			const response = await axios.post<{ user: User; message: string }>(`/verify-email`, { code });
-			set({ user: response.data.user, isAuthenticated: true, isLoading: false, message: response.data.message });
+			const response = await verifyEmailRequest(code);			
+			saveAccessToken(response.token);
+			set({ user: response.user, isAuthenticated: true, isLoading: false, message: response.message });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				set({ error: error.response?.data.message || error.message, isLoading: false });

@@ -30,3 +30,10 @@ export const refreshTokenRequest = async (): Promise<IResponseAuth> => {
   const response = await api.post("/auth/refresh-token",);
   return response.data;
 };
+
+export const verifyEmailRequest = async (code: string): Promise<IResponseAuth> => {
+  const response = await api.post("/auth/verify-email", { code });
+  return response.data;
+};
+
+

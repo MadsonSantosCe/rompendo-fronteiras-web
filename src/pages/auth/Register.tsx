@@ -45,7 +45,7 @@ export const Register = () => {
 
   const handleFormSubmit = async ({name, email, password}: RegisterForm) => {
     await signup(email, password, name);
-    navigate("/");
+    navigate("/verify-email");
   };
 
   return (

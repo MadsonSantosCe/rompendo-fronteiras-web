@@ -3,6 +3,7 @@ function OtpVerification() {
     <div>
       OtpVerification
     </div>
+    //navigate("/");
   )
 }
 
