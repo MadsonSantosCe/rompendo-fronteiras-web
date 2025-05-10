@@ -1,4 +1,5 @@
 import { env } from "@/config/env";
+import { getAccessToken } from "@/lib/utils";
 import axios from "axios";
 
 const base_URL = env.VITE_BASE_URL;
@@ -8,14 +9,16 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-export const setAuthorizationToken = (token: string) => {
-  api.interceptors.request.use(
-    (config) => {
-      config.headers.set('authorization', `Bearer ${token}`);
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
+api.interceptors.request.use(
+  (config) => {
+    const token = getAccessToken(); 
+ 
+    if (token) {
+      config.headers.set('Authorization', `Bearer ${token}`);
     }
-  );
-};
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

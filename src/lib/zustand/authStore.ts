@@ -3,6 +3,7 @@ import axios from "axios";
 import { refreshTokenRequest, signInRequest, signOutRequest, signUpRequest } from "@/services/auth/authServices";
 import { create } from "zustand";
 import { toast } from "sonner";
+import { removeAccessToken, saveAccessToken } from "../utils";
 
 interface User {
 	id: string;
@@ -36,13 +37,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
 	isAuthenticated: false,
 	error: null,
 	isLoading: false,
-	isCheckingAuth: true,
+	isCheckingAuth: false,
 	message: null,
 
 	signup: async (email, password, name) => {
 		set({ isLoading: true, error: null, message: null });
 		try {
 			const response = await signUpRequest({ email, password, name }) ;
+			saveAccessToken(response.token);
 			set({ user: response.user, isAuthenticated: true, isLoading: false });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
@@ -59,6 +61,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		set({ isLoading: true, error: null, message: null });
 		try {
 			const response = await signInRequest({ email, password });
+			saveAccessToken(response.token);
 			set({
 				isAuthenticated: true,
 				user: response.user,
@@ -67,10 +70,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
 			});
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
-                set({ error: error.response?.data.message || error.message, isLoading: false });
+                set({ error: error.response?.data.message || error.message, isLoading: false});
                 toast.error(`Erro: ${error.response?.data.message || error.message}`);
             } else {
-                set({ error: "Occoreu um erro inesperado", isLoading: false });
+                set({ error: "Occoreu um erro inesperado", isLoading: false});
                 toast.error(`Erro: ${error}`);
             }
 		}
@@ -80,6 +83,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		set({ isLoading: true, error: null, message: null });
 		try {
 			await signOutRequest();
+			removeAccessToken();
 			set({ user: null, isAuthenticated: false, error: null, isLoading: false });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
@@ -144,14 +148,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		set({ isCheckingAuth: true, error: null, message: null });
 		try {
 			const response = await refreshTokenRequest();
+			saveAccessToken(response.token);
 			set({ user: response.user, isAuthenticated: true, isCheckingAuth: false });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
-                set({ error: error.response?.data.message || error.message, isLoading: false });
-                toast.error(`Erro: ${error.response?.data.message || error.message}`);
+                set({ error: error.response?.data.message || error.message, isLoading: false, isCheckingAuth: false });
             } else {
-                set({ error: "Occoreu um erro inesperado", isLoading: false });
-                toast.error(`Erro: ${error}`);
+                set({ error: "Occoreu um erro inesperado", isLoading: false, isCheckingAuth: false });
             }
 		}
 	},
