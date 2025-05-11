@@ -24,8 +24,8 @@ export const EmailVerification = () => {
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
   const verifyEmail = useAuthStore((state) => state.verifyEmail);
-  const message = useAuthStore((state) => state.message);
   const isLoading = useAuthStore((state) => state.isLoading);
+  const message = useAuthStore((state) => state.message);
 
   useEffect(() => {
     if (otp.length === 6) {
@@ -35,11 +35,8 @@ export const EmailVerification = () => {
 
   const verifyEmailFn = async (code: string) => {
     await verifyEmail(code);
-
-    if (message) {
-      navigate("/");
-      toast.success("E-mail verificado com sucesso!");
-    }
+    navigate("/");
+    toast.success(message);
   };
 
   if (isLoading) return <FullPageLoader />;
