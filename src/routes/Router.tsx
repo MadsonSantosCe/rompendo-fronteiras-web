@@ -10,7 +10,7 @@ import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
-import OtpVerification from "@/pages/auth/OtpVerification";
+import { EmailVerification }  from "@/pages/auth/EmailVerification";
 import { useAuthStore } from "@/lib/zustand/authStore";
 import { useEffect } from "react";
 import { getAccessToken } from "@/lib/utils";
@@ -71,7 +71,7 @@ export const Router = () => {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Route>
 
-        <Route path="/verify-email" element={<OtpVerification />} />
+        <Route path="/verify-email" element={<EmailVerification />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
