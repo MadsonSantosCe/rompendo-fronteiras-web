@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		set({ isLoading: true, error: null, message: null });
 		try {
 			const response = await signUpRequest({ email, password, name });
-			set({ user: response.user, isAuthenticated: true, isLoading: false });
+			set({ user: response.user, isAuthenticated: false, isLoading: false });
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
                 set({ error: error.response?.data.message || error.message, isLoading: false });
@@ -100,7 +100,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		try {
 			const response = await verifyEmailRequest(code);			
 			saveAccessToken(response.token);
-			set({ user: response.user, isAuthenticated: true, isLoading: false, message: response.message });
+			set({
+				isAuthenticated: true,
+				user: response.user,
+				error: null,
+				isLoading: false,
+			});
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				set({ error: error.response?.data.message || error.message, isLoading: false });
@@ -156,6 +161,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             } else {
                 set({ error: "Occoreu um erro inesperado", isLoading: false, isCheckingAuth: false });
             }
+			removeAccessToken();
 		}
 	},
 }));

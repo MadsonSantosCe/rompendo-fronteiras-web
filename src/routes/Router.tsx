@@ -68,10 +68,9 @@ export const Router = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} /> 
+          <Route path="/verify-email" element={<EmailVerification />} />
         </Route>
-
-        <Route path="/verify-email" element={<EmailVerification />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
