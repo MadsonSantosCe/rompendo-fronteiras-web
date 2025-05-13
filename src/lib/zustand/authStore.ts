@@ -1,9 +1,10 @@
 
 import axios from "axios";
-import { refreshTokenRequest, signInRequest, signOutRequest, signUpRequest, verifyEmailRequest } from "@/services/auth/authServices";
+import { refreshTokenRequest, signInRequest, signOutRequest, signUpRequest, validateSessionRequest, verifyEmailRequest } from "@/services/auth/authServices";
 import { create } from "zustand";
 import { toast } from "sonner";
 import { removeAccessToken, saveAccessToken } from "../utils";
+import { IResponseAuth } from "@/types/authTypes";
 
 interface User {
 	id: string;
@@ -21,13 +22,14 @@ interface AuthState {
 }
 
 interface AuthActions {
-	signup: (email: string, password: string, name: string) => Promise<void>;
-	signIn: (email: string, password: string) => Promise<void>;
+	signup: (email: string, password: string, name: string) => Promise<IResponseAuth>;
+	signIn: (email: string, password: string) => Promise<IResponseAuth>;
 	signOut: () => Promise<void>;
-	verifyEmail: (code: string) => Promise<void>;
+	verifyEmail: (code: string) => Promise<IResponseAuth>;
 	forgotPassword: (email: string) => Promise<void>;
 	resetPassword: (token: string, password: string) => Promise<void>;    
 	refreshToken: () => Promise<void>;
+	validateSession: () => Promise<IResponseAuth>;
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -44,7 +46,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		set({ isLoading: true, error: null, message: null });
 		try {
 			const response = await signUpRequest({ email, password, name });
-			set({ user: response.user, isAuthenticated: false, isLoading: false });
+			set({ user: response.user, isAuthenticated: false, isLoading: false });			
+			return response;
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
                 set({ error: error.response?.data.message || error.message, isLoading: false });
@@ -52,7 +55,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
             } else {
                 set({ error: "Occoreu um erro inesperado", isLoading: false });
                 toast.error(`Erro: ${error}`);
-            }
+            }			
+			throw error;
 		}
 	},
 
@@ -61,20 +65,18 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		try {
 			const response = await signInRequest({ email, password });
 			saveAccessToken(response.token);
-			set({
-				isAuthenticated: true,
-				user: response.user,
-				error: null,
-				isLoading: false,
+			set({ isAuthenticated: true, user: response.user, error: null, isLoading: false,
 			});
+			return response;
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
-                set({ error: error.response?.data.message || error.message, isLoading: false});
-                toast.error(`Erro: ${error.response?.data.message || error.message}`);
-            } else {
-                set({ error: "Occoreu um erro inesperado", isLoading: false});
-                toast.error(`Erro: ${error}`);
-            }
+				set({ error: error.response?.data.message || error.message, isLoading: false});
+				toast.error(`Erro: ${error.response?.data.message || error.message}`);
+			} else {
+				set({ error: "Occoreu um erro inesperado", isLoading: false});
+				toast.error(`Erro: ${error}`);
+			}
+			throw error;
 		}
 	},
 
@@ -100,12 +102,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
 		try {
 			const response = await verifyEmailRequest(code);			
 			saveAccessToken(response.token);
-			set({
-				isAuthenticated: true,
-				user: response.user,
-				error: null,
-				isLoading: false,
-			});
+			set({ isAuthenticated: true, user: response.user, error: null, isLoading: false, });
+			return response;
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				set({ error: error.response?.data.message || error.message, isLoading: false });
@@ -114,8 +112,42 @@ export const useAuthStore = create<AuthStore>((set) => ({
 				set({ error: "Occoreu um erro inesperado", isLoading: false });
 				toast.error(`Erro: ${error}`);
 			}
+			throw error;
 		}
 	},
+    
+	refreshToken: async () => {
+		set({ isCheckingAuth: true, error: null, message: null });
+		try {
+			const response = await refreshTokenRequest();
+			saveAccessToken(response.token);
+			set({ user: response.user, isAuthenticated: true, isCheckingAuth: false });
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+                set({ error: error.response?.data.message || error.message, isLoading: false, isCheckingAuth: false });
+            } else {
+                set({ error: "Occoreu um erro inesperado", isLoading: false, isCheckingAuth: false });
+            }
+			removeAccessToken();
+		}
+	},
+
+	validateSession: async () => {
+		set({ isCheckingAuth: true, error: null, message: null });
+		try {
+			const response = await validateSessionRequest();
+			set({ user: response.user, isAuthenticated: true, isCheckingAuth: false });
+			return response;
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+                set({ error: error.response?.data.message || error.message, isLoading: false, isCheckingAuth: false });
+            } else {
+                set({ error: "Occoreu um erro inesperado", isLoading: false, isCheckingAuth: false });
+            }
+			removeAccessToken();
+			throw error;
+		}
+	},	
 
 	forgotPassword: async (email) => {
 		set({ isLoading: true, error: null, message: null });
@@ -146,22 +178,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
                 set({ error: "Occoreu um erro inesperado", isLoading: false });
                 toast.error(`Erro: ${error}`);
             }
-		}
-	},
-    
-	refreshToken: async () => {
-		set({ isCheckingAuth: true, error: null, message: null });
-		try {
-			const response = await refreshTokenRequest();
-			saveAccessToken(response.token);
-			set({ user: response.user, isAuthenticated: true, isCheckingAuth: false });
-		} catch (error) {
-			if (axios.isAxiosError(error)) {
-                set({ error: error.response?.data.message || error.message, isLoading: false, isCheckingAuth: false });
-            } else {
-                set({ error: "Occoreu um erro inesperado", isLoading: false, isCheckingAuth: false });
-            }
-			removeAccessToken();
 		}
 	},
 }));

@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuthStore } from "@/lib/zustand/authStore";
+import { FullPageLoader } from "@/components/FullPageLoader";
 
 const RegisterFormSchema = z
   .object({
@@ -33,7 +34,7 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
   const navigate = useNavigate();
-  const {signup, isLoading} = useAuthStore();
+  const { signup, isLoading } = useAuthStore();
 
   const {
     register,
@@ -43,25 +44,32 @@ export const Register = () => {
     resolver: zodResolver(RegisterFormSchema),
   });
 
-  const handleFormSubmit = async ({name, email, password}: RegisterForm) => {
+  const handleFormSubmit = async ({ name, email, password }: RegisterForm) => {
     await signup(email, password, name);
     navigate("/verify-email");
   };
 
-  return (
+  return isLoading ? (
+    <FullPageLoader />
+  ) : (
     <AuthLayout>
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold text-slate-700 flex items-center justify-center gap-2 dark:text-white">Crie sua Conta</CardTitle>
+            <CardTitle className="text-3xl font-bold text-slate-700 flex items-center justify-center gap-2 dark:text-white">
+              Crie sua Conta
+            </CardTitle>
             <CardDescription>Junte-se a nós! É rápido e fácil.</CardDescription>
           </CardHeader>
 
           <CardContent className="p-6 sm:p-8">
-            <form className="space-y-6">
+            <form
+              className="space-y-6"
+              onSubmit={handleSubmit(handleFormSubmit)}
+            >
               <div className="space-y-2">
                 <label
-                  htmlFor="password"
+                  htmlFor="name"
                   className="text-sm font-medium text-slate-400"
                 >
                   Nome
@@ -81,7 +89,7 @@ export const Register = () => {
 
               <div className="space-y-2">
                 <label
-                  htmlFor="password"
+                  htmlFor="email"
                   className="text-sm font-medium text-slate-400"
                 >
                   E-mail
@@ -121,7 +129,7 @@ export const Register = () => {
 
               <div className="space-y-2">
                 <label
-                  htmlFor="password"
+                  htmlFor="confirmPassword"
                   className="text-sm font-medium text-slate-400"
                 >
                   Confirmar Senha
@@ -143,7 +151,6 @@ export const Register = () => {
                 type="submit"
                 disabled={isLoading}
                 className="text-white w-full h-10"
-                onClick={handleSubmit(handleFormSubmit)}
               >
                 {isLoading ? "Registrando..." : "Registrar"}
               </Button>

@@ -36,4 +36,9 @@ export const verifyEmailRequest = async (code: string): Promise<IResponseAuth> =
   return response.data;
 };
 
+export const validateSessionRequest = async (): Promise<IResponseAuth> => {
+  const response = await api.get("/auth/validate-session");
+  return response.data;
+};
+
 

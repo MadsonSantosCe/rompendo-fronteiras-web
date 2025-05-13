@@ -18,14 +18,12 @@ import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/lib/zustand/authStore";
 import { FullPageLoader } from "@/components/FullPageLoader";
-import { toast } from "sonner";
 
 export const EmailVerification = () => {
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
   const verifyEmail = useAuthStore((state) => state.verifyEmail);
   const isLoading = useAuthStore((state) => state.isLoading);
-  const message = useAuthStore((state) => state.message);
 
   useEffect(() => {
     if (otp.length === 6) {
@@ -34,14 +32,13 @@ export const EmailVerification = () => {
   }, [otp]);
 
   const verifyEmailFn = async (code: string) => {
-    await verifyEmail(code);
-    navigate("/");
-    toast.success(message);
+    const result = await verifyEmail(code);
+    if (result) navigate("/");
   };
 
-  if (isLoading) return <FullPageLoader />;
-
-  return (
+  return isLoading ? (
+    <FullPageLoader />
+  ) : (
     <AuthLayout>
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">

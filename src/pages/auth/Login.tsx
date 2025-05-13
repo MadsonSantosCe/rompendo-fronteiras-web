@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuthStore } from "@/lib/zustand/authStore";
+import { FullPageLoader } from "@/components/FullPageLoader"; // ← necessário para exibir o loader
 
 const LoginFormSchema = z.object({
   email: z.string().email("Formato de e-mail inválido."),
@@ -32,39 +33,42 @@ export const Login = () => {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  const {signIn, isLoading} = useAuthStore();
+  const { signIn, isLoading } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleFormSubmit = async ({email, password}: LoginFormData) => {
-    await signIn(email, password);
-    navigate("/");
+  const handleFormSubmit = async ({ email, password }: LoginFormData) => {
+    const result = await signIn(email, password);
+    if (result) navigate("/");
   };
-
-  return (
+  
+  return isLoading ? (
+    <FullPageLoader />
+  ) : (
     <AuthLayout>
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold text-slate-700 flex items-center justify-center gap-2 dark:text-white">Bem-vindo de Volta!</CardTitle>
+            <CardTitle className="text-3xl font-bold text-slate-700 flex items-center justify-center gap-2 dark:text-white">
+              Bem-vindo de Volta!
+            </CardTitle>
             <CardDescription>Acesse sua conta para continuar.</CardDescription>
           </CardHeader>
 
           <CardContent className="p-6 sm:p-8">
             <form className="space-y-6">
               <div className="space-y-2">
-              <label
-                    htmlFor="email"
-                    className="text-sm font-medium text-slate-400"
-                  >
-                    E-mail
-                  </label>
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-slate-400"
+                >
+                  E-mail
+                </label>
                 <FormInput
                   {...register("email")}
                   id="email"
                   placeholder="seuemail@exemplo.com"
                   type="email"
                 />
-                
                 {errors.email && (
                   <p className="text-red-400 text-xs italic pt-1">
                     {errors.email.message}
@@ -93,7 +97,6 @@ export const Login = () => {
                   placeholder="••••••••"
                   type="password"
                 />
-                
                 {errors.password && (
                   <p className="text-red-400 text-xs italic pt-1">
                     {errors.password.message}

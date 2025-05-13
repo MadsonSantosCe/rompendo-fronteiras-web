@@ -43,15 +43,15 @@ const UnauthenticatedRouteLayout = () => {
 
 export const Router = () => {
   const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
-  const refreshTokenFn = useAuthStore((state) => state.refreshToken);
+  const validateSession = useAuthStore((state) => state.validateSession);
 
   useEffect(() => {
     const token = getAccessToken();
 
     if (token) {
-      refreshTokenFn();
+      validateSession();
     }
-  }, [refreshTokenFn]);
+  }, []);
 
   if (isCheckingAuth) {
     return <FullPageLoader />;
