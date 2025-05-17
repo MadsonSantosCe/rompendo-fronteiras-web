@@ -13,8 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAuthStore } from "@/lib/zustand/authStore";
-import { FullPageLoader } from "@/components/FullPageLoader";
 
 const RegisterFormSchema = z
   .object({
@@ -34,7 +32,6 @@ type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
   const navigate = useNavigate();
-  const { signup, isLoading } = useAuthStore();
 
   const {
     register,
@@ -44,14 +41,11 @@ export const Register = () => {
     resolver: zodResolver(RegisterFormSchema),
   });
 
-  const handleFormSubmit = async ({ name, email, password }: RegisterForm) => {
-    await signup(email, password, name);
+  const handleFormSubmit = async () => {
     navigate("/verify-email");
   };
 
-  return isLoading ? (
-    <FullPageLoader />
-  ) : (
+  return (
     <AuthLayout>
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
@@ -149,10 +143,8 @@ export const Register = () => {
 
               <Button
                 type="submit"
-                disabled={isLoading}
                 className="text-white w-full h-10"
               >
-                {isLoading ? "Registrando..." : "Registrar"}
               </Button>
             </form>
           </CardContent>

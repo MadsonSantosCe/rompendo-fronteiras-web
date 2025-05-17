@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import {
   Card,
@@ -15,30 +14,11 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/lib/zustand/authStore";
-import { FullPageLoader } from "@/components/FullPageLoader";
 
 export const EmailVerification = () => {
   const [otp, setOtp] = useState("");
-  const navigate = useNavigate();
-  const verifyEmail = useAuthStore((state) => state.verifyEmail);
-  const isLoading = useAuthStore((state) => state.isLoading);
 
-  useEffect(() => {
-    if (otp.length === 6) {
-      verifyEmailFn(otp);
-    }
-  }, [otp]);
-
-  const verifyEmailFn = async (code: string) => {
-    const result = await verifyEmail(code);
-    if (result) navigate("/");
-  };
-
-  return isLoading ? (
-    <FullPageLoader />
-  ) : (
+  return (
     <AuthLayout>
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">

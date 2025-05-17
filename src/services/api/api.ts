@@ -1,7 +1,7 @@
+import axios from "axios";
 import { env } from "@/config/env";
 import { getAccessToken } from "@/lib/utils";
-import { useAuthStore } from "@/lib/zustand/authStore";
-import axios from "axios";
+import { refreshTokenRequest } from "../auth/authServices";
 
 const base_URL = env.VITE_BASE_URL;
 
@@ -10,41 +10,38 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken(); 
- 
-    if (token) {
-      config.headers.set('Authorization', `Bearer ${token}`);
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+api.interceptors.request.use((config) => {
+  const accessToken = getAccessToken();
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
-);
+  return config;
+});
 
 api.interceptors.response.use(
-  (response) => {
-    console.log('Response =', response);
-    return response;
-  },
+  (res) => res,
   async (error) => {
-    console.log('error =', error);
-
     const originalRequest = error.config;
 
-    if (error.response?.status === 403 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/login") &&
+      !originalRequest.url.includes("/refresh-token")
+    ) {
       originalRequest._retry = true;
+
       try {
-        const refreshToken = useAuthStore.getState().refreshToken;
-        await refreshToken();
+        await refreshTokenRequest();
         return api(originalRequest);
-      } catch (error) {
-        return Promise.reject(error);
+      } catch (refreshError) {
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
   }
 );
+
+export default api;

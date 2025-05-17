@@ -14,9 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useAuthStore } from "@/lib/zustand/authStore";
-import { FullPageLoader } from "@/components/FullPageLoader"; // ← necessário para exibir o loader
-
+import { useSignIn } from "@/hooks/auth/useAuthentication";
+import { FullPageLoader } from "@/components/FullPageLoader";
 const LoginFormSchema = z.object({
   email: z.string().email("Formato de e-mail inválido."),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
@@ -33,15 +32,15 @@ export const Login = () => {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  const { signIn, isLoading } = useAuthStore();
+  const { mutate: signIn, isPending } = useSignIn();  
   const navigate = useNavigate();
 
   const handleFormSubmit = async ({ email, password }: LoginFormData) => {
-    const result = await signIn(email, password);
-    if (result) navigate("/");
+    signIn({ email, password });
+    navigate("/");
   };
-  
-  return isLoading ? (
+
+  return isPending ? (
     <FullPageLoader />
   ) : (
     <AuthLayout>
@@ -113,11 +112,11 @@ export const Login = () => {
 
               <Button
                 type="submit"
-                disabled={isLoading}
                 className="text-white w-full h-10"
+                disabled={isPending}
                 onClick={handleSubmit(handleFormSubmit)}
               >
-                {isLoading ? "Entrando..." : "Entrar"}
+                Entrar
               </Button>
             </form>
           </CardContent>
