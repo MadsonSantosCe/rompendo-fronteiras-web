@@ -5,17 +5,17 @@ import { Register } from "@/pages/auth/Register";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import { EmailVerification } from "@/pages/auth/EmailVerification";
-import { useAuth } from "@/hooks/auth/useAuthentication";
+import { useVerifyAcsessToken } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "@/components/FullPageLoader";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { data: user, isLoading } = useAuth();
+  const { data, isLoading } = useVerifyAcsessToken();
 
   if (isLoading) {
     return <FullPageLoader />;
   }
   
-  return user ? children : <Navigate to="/login" />;
+  return data?.user ? children : <Navigate to="/login" />;
 };
 
 export const Router = () => {

@@ -11,9 +11,8 @@ import { useSignOut } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "./FullPageLoader";
 
 export default function Header() {
+  const { mutate: signOut, isPending } = useSignOut();
   const navigate = useNavigate();
-  
-    const { mutate: signOut, isPending } = useSignOut();
 
   const handleSignOut = () => {
     signOut();
@@ -21,8 +20,8 @@ export default function Header() {
   };
 
   return isPending ? (
-      <FullPageLoader />
-    ) : (
+    <FullPageLoader />
+  ) : (
     <header className="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-900 shadow-sm dark:shadow-md">
       <div className="flex items-center gap-4">
         <Menu className="w-5 h-5 cursor-pointer text-gray-700 dark:text-gray-200" />

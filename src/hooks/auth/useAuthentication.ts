@@ -7,12 +7,12 @@ import {
 import { getAccessToken, removeAccessToken, saveAccessToken } from "@/lib/utils";
 import { ISignInPayload } from "@/types/authTypes";
 
-export function useAuth() {
+export function useVerifyAcsessToken() {
 const token = getAccessToken();
 
   return useQuery({
-    queryKey: ["validate-session"],
-    queryFn: () => verifyAcsessTokenResquest,
+    queryKey: ["verify-acsess-token"],
+    queryFn: () => verifyAcsessTokenResquest(),
     staleTime: Infinity,
     enabled: !!token,
   });

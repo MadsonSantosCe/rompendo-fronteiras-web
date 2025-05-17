@@ -20,7 +20,7 @@ export const signOutRequest = async () => {
 
 export const verifyAcsessTokenResquest = async () => {
   try {
-    const response = await api.post("/auth/validate-session");
+    const response = await api.post("/auth/verify-acsess-token");
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
