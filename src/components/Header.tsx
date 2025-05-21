@@ -9,9 +9,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSignOut } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "./FullPageLoader";
+import { UseAuth } from "@/contexts/auth/authProvider";
 
 export default function Header() {
   const { mutate: signOut, isPending } = useSignOut();
+  const { user } = UseAuth();
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -72,7 +74,7 @@ export default function Header() {
             </Avatar>
             <div className="text-left hidden sm:block">
               <div className="font-medium text-sm text-gray-900 dark:text-white">
-                {}
+                {user?.name}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
                 Admin

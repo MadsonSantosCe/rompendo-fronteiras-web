@@ -1,38 +1,42 @@
+import { UseAuth } from "@/contexts/auth/authProvider";
+import { ISignInPayload, ISignUpPayload } from "@/types/authTypes";
+import { getAccessToken } from "@/utils/stored/localStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  signInRequest,
-  signOutRequest,
-  verifyAcsessTokenResquest,
-} from "../../services/auth/authServices";
-import { getAccessToken, removeAccessToken, saveAccessToken } from "@/lib/utils";
-import { ISignInPayload } from "@/types/authTypes";
 
-export function useVerifyAcsessToken() {
-const token = getAccessToken();
-
+export function useVerifyAcsessToken() {  
+  const { verifyAcessToken } = UseAuth();
+  const token = getAccessToken();
+  
   return useQuery({
-    queryKey: ["verify-acsess-token"],
-    queryFn: () => verifyAcsessTokenResquest(),
-    staleTime: Infinity,
+    queryKey: ["verify-access-token"],
+    queryFn: verifyAcessToken,
+    staleTime: Infinity,    
     enabled: !!token,
   });
 }
 
 export function useSignIn() {
+  const { signIn } = UseAuth();
   return useMutation({
     mutationKey: ["signIn"],
-    mutationFn: ({ email, password }: ISignInPayload) =>
-      signInRequest({ email, password }),
-    onSuccess: (data) => {
-      saveAccessToken(data.accessToken);
-    },
+    mutationFn: async ({ email, password }: ISignInPayload) =>
+      await signIn({ email, password }),
   });
 }
 
 export function useSignOut() {
+  const { signOut } = UseAuth();
   return useMutation({
     mutationKey: ["signOut"],
-    mutationFn: signOutRequest,
-    onSuccess: removeAccessToken,
+    mutationFn: async () => await signOut(),
+  });
+}
+
+export function useSignUp() {
+  const { signUp } = UseAuth();
+  return useMutation({
+    mutationKey: ["signUp"],
+    mutationFn: async ({name, email, password }: ISignUpPayload) =>
+      await signUp({name, email, password }),
   });
 }

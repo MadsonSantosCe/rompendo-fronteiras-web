@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSignIn } from "@/hooks/auth/useAuthentication";
-import { FullPageLoader } from "@/components/FullPageLoader";
+
 const LoginFormSchema = z.object({
   email: z.string().email("Formato de e-mail inválido."),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
@@ -32,17 +32,15 @@ export const Login = () => {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  const { mutate: signIn, isPending } = useSignIn();  
+  const { mutate: signIn, isPending } = useSignIn();
   const navigate = useNavigate();
 
   const handleFormSubmit = async ({ email, password }: LoginFormData) => {
-    signIn({ email, password });
+    await signIn({ email, password });
     navigate("/");
   };
 
-  return isPending ? (
-    <FullPageLoader />
-  ) : (
+  return (
     <AuthLayout>
       <div className="flex items-center justify-center w-full px-4">
         <Card className="w-full max-w-md">
@@ -54,12 +52,9 @@ export const Login = () => {
           </CardHeader>
 
           <CardContent className="p-6 sm:p-8">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit(handleFormSubmit)}>
               <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium text-slate-400"
-                >
+                <label htmlFor="email" className="text-sm font-medium text-slate-400">
                   E-mail
                 </label>
                 <FormInput
@@ -77,16 +72,10 @@ export const Login = () => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <label
-                    htmlFor="password"
-                    className="text-sm font-medium text-slate-400"
-                  >
+                  <label htmlFor="password" className="text-sm font-medium text-slate-400">
                     Senha
                   </label>
-                  <Link
-                    to="/forgot-password"
-                    className="text-xs text-primary hover:underline"
-                  >
+                  <Link to="/forgot-password" className="text-xs text-primary hover:underline">
                     Esqueceu a senha?
                   </Link>
                 </div>
@@ -114,7 +103,6 @@ export const Login = () => {
                 type="submit"
                 className="text-white w-full h-10"
                 disabled={isPending}
-                onClick={handleSubmit(handleFormSubmit)}
               >
                 Entrar
               </Button>
@@ -124,10 +112,7 @@ export const Login = () => {
           <CardFooter className="flex flex-col gap-4">
             <div className="text-center text-sm text-slate-400">
               <span>Não tem uma conta? </span>
-              <Link
-                to="/register"
-                className="font-semibold text-primary hover:underline"
-              >
+              <Link to="/register" className="font-semibold text-primary hover:underline">
                 Cadastre-se
               </Link>
             </div>

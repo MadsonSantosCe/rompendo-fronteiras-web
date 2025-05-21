@@ -1,7 +1,6 @@
 import axios from "axios";
 import { env } from "@/config/env";
-import { getAccessToken } from "@/lib/utils";
-import { refreshTokenRequest } from "../auth/authServices";
+import { getAccessToken } from "@/utils/stored/localStore";
 
 const base_URL = env.VITE_BASE_URL;
 
@@ -17,31 +16,5 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
-
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !originalRequest.url.includes("/login") &&
-      !originalRequest.url.includes("/refresh-token")
-    ) {
-      originalRequest._retry = true;
-
-      try {
-        await refreshTokenRequest();
-        return api(originalRequest);
-      } catch (refreshError) {
-        window.location.href = "/login";
-        return Promise.reject(refreshError);
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
 
 export default api;
