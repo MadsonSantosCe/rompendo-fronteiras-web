@@ -1,7 +1,7 @@
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -32,12 +32,10 @@ export const Login = () => {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  const { mutate: signIn, isPending } = useSignIn();
-  const navigate = useNavigate();
+  const { mutateAsync: signIn, isPending } = useSignIn();
 
   const handleFormSubmit = async ({ email, password }: LoginFormData) => {
     await signIn({ email, password });
-    navigate("/");
   };
 
   return (

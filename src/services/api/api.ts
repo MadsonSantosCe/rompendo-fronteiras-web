@@ -1,6 +1,6 @@
 import axios from "axios";
 import { env } from "@/config/env";
-import { getAccessToken } from "@/utils/stored/localStore";
+import { getAccessToken } from "@/utils/storage/localStore";
 
 const base_URL = env.VITE_BASE_URL;
 

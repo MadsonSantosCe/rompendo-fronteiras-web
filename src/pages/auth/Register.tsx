@@ -1,7 +1,7 @@
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -32,7 +32,6 @@ const RegisterFormSchema = z
 type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
-  const navigate = useNavigate();
 
   const {
     register,
@@ -42,11 +41,10 @@ export const Register = () => {
     resolver: zodResolver(RegisterFormSchema),
   });
 
-  const { mutate: signUp, isPending } = useSignUp();
+  const { mutateAsync: signUp, isPending } = useSignUp();
 
   const handleFormSubmit = async ({ name, email, password }: RegisterForm) => {
     await signUp({ name, email, password });
-    navigate("/verify-email");
   };
 
   return (

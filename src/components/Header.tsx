@@ -6,19 +6,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useNavigate } from "react-router-dom";
 import { useSignOut } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "./FullPageLoader";
 import { UseAuth } from "@/contexts/auth/authProvider";
 
 export default function Header() {
-  const { mutate: signOut, isPending } = useSignOut();
+  const { mutateAsync: signOut, isPending } = useSignOut();
   const { user } = UseAuth();
-  const navigate = useNavigate();
 
-  const handleSignOut = () => {
-    signOut();
-    navigate("/login");
+  const handleSignOut = async() => {
+    await signOut();
   };
 
   return isPending ? (

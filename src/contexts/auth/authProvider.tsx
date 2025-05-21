@@ -7,9 +7,10 @@ import {
   useState,
 } from "react";
 import axios, { type AxiosResponse } from "axios";
-import { removeAccessToken, saveAccessToken } from "@/utils/stored/localStore";
+import { removeAccessToken, saveAccessToken } from "@/utils/storage/localStore";
 import api from "@/services/api/api";
 import { ISignInPayload, ISignUpPayload } from "@/types/authTypes";
+import { toast } from "sonner";
 
 type authProviderPromps = {
   children: ReactNode;
@@ -58,16 +59,23 @@ function AuthProvider({ children }: authProviderPromps) {
     }
   }, []);
 
-  const signUp = useCallback(async ({ name, email, password }: ISignUpPayload) => {
-    try {
-      const response = await api.post("/auth/sign-up", { name, email, password });
-      setUser(response.data.user);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data);
+  const signUp = useCallback(
+    async ({ name, email, password }: ISignUpPayload) => {
+      try {
+        const response = await api.post("/auth/sign-up", {
+          name,
+          email,
+          password,
+        });
+        setUser(response.data.user);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(error.response?.data);
+        }
       }
-    }
-  }, []);
+    },
+    []
+  );
 
   const verifyAcessToken = useCallback(async () => {
     try {
@@ -91,6 +99,7 @@ function AuthProvider({ children }: authProviderPromps) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         removeAccessToken();
         setUser(null);
+        toast.error("Sessão expirada, faça login novamente");
       }
     }
   }, []);
