@@ -1,12 +1,19 @@
-import { UseAuth } from "@/contexts/auth/authProvider";
 import { ISignInPayload, ISignUpPayload } from "@/types/authTypes";
 import { getAccessToken } from "@/utils/storage/localStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/auth/authProvider";
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  return context;
+}
 
 export function useVerifyAcsessToken() {
-  const { verifyAcessToken } = UseAuth();
+  const { verifyAcessToken } = useAuth();
   const token = getAccessToken();
 
   return useQuery({
@@ -17,7 +24,7 @@ export function useVerifyAcsessToken() {
   });
 }
 export function useSignIn() {
-  const { signIn } = UseAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   return useMutation({
@@ -36,7 +43,7 @@ export function useSignIn() {
 }
 
 export function useSignOut() {
-  const { signOut } = UseAuth();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
 
   return useMutation({
@@ -55,7 +62,7 @@ export function useSignOut() {
 }
 
 export function useSignUp() {
-  const { signUp } = UseAuth();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
   return useMutation({

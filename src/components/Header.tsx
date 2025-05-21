@@ -6,13 +6,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSignOut } from "@/hooks/auth/useAuthentication";
+import { useAuth, useSignOut } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "./FullPageLoader";
-import { UseAuth } from "@/contexts/auth/authProvider";
 
 export default function Header() {
   const { mutateAsync: signOut, isPending } = useSignOut();
-  const { user } = UseAuth();
+  const { user } = useAuth();
 
   const handleSignOut = async() => {
     await signOut();

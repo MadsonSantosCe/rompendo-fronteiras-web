@@ -2,7 +2,6 @@ import {
   createContext,
   useCallback,
   useMemo,
-  useContext,
   type ReactNode,
   useState,
 } from "react";
@@ -42,8 +41,10 @@ function AuthProvider({ children }: authProviderPromps) {
       saveAccessToken(response.data.accessToken);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data);
+        throw new Error(error.response?.data.message);
       }
+
+      throw new Error("Erro ao realizar login. Tente novamente mais tarde.");
     }
   }, []);
 
@@ -54,8 +55,10 @@ function AuthProvider({ children }: authProviderPromps) {
       setUser(null);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data);
+        throw new Error(error.response?.data.message);
       }
+
+      throw new Error("Erro ao cadastrar usuário. Tente novamente mais tarde.");
     }
   }, []);
 
@@ -70,8 +73,10 @@ function AuthProvider({ children }: authProviderPromps) {
         setUser(response.data.user);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          throw new Error(error.response?.data);
+          throw new Error(error.response?.data.message);
         }
+
+        throw new Error("Erro ao realizar logout. Tente novamente mais tarde.");
       }
     },
     []
@@ -147,12 +152,4 @@ function AuthProvider({ children }: authProviderPromps) {
   );
 }
 
-function UseAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
-
-export { AuthProvider, UseAuth };
+export { AuthProvider, AuthContext };

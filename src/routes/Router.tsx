@@ -5,13 +5,12 @@ import { Register } from "@/pages/auth/Register";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import { EmailVerification } from "@/pages/auth/EmailVerification";
-import { useVerifyAcsessToken } from "@/hooks/auth/useAuthentication";
+import { useAuth, useVerifyAcsessToken } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "@/components/FullPageLoader";
-import { UseAuth } from "@/contexts/auth/authProvider";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isLoading } = useVerifyAcsessToken();
-  const { user } = UseAuth();
+  const { user } = useAuth();
 
   if (isLoading) {
     return <FullPageLoader />;
