@@ -1,7 +1,7 @@
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/form-input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useSignUp } from "@/hooks/auth/useAuthentication";
 
 const RegisterFormSchema = z
   .object({
@@ -31,7 +32,6 @@ const RegisterFormSchema = z
 type RegisterForm = z.infer<typeof RegisterFormSchema>;
 
 export const Register = () => {
-  const navigate = useNavigate();
 
   const {
     register,
@@ -41,8 +41,10 @@ export const Register = () => {
     resolver: zodResolver(RegisterFormSchema),
   });
 
-  const handleFormSubmit = async () => {
-    navigate("/verify-email");
+  const { mutateAsync: signUp, isPending } = useSignUp();
+
+  const handleFormSubmit = async ({ name, email, password }: RegisterForm) => {
+    await signUp({ name, email, password });
   };
 
   return (
@@ -57,15 +59,9 @@ export const Register = () => {
           </CardHeader>
 
           <CardContent className="p-6 sm:p-8">
-            <form
-              className="space-y-6"
-              onSubmit={handleSubmit(handleFormSubmit)}
-            >
+            <form className="space-y-6" onSubmit={handleSubmit(handleFormSubmit)}>
               <div className="space-y-2">
-                <label
-                  htmlFor="name"
-                  className="text-sm font-medium text-slate-400"
-                >
+                <label htmlFor="name" className="text-sm font-medium text-slate-400">
                   Nome
                 </label>
                 <FormInput
@@ -82,10 +78,7 @@ export const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium text-slate-400"
-                >
+                <label htmlFor="email" className="text-sm font-medium text-slate-400">
                   E-mail
                 </label>
                 <FormInput
@@ -102,10 +95,7 @@ export const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <label
-                  htmlFor="password"
-                  className="text-sm font-medium text-slate-400"
-                >
+                <label htmlFor="password" className="text-sm font-medium text-slate-400">
                   Senha
                 </label>
                 <FormInput
@@ -122,10 +112,7 @@ export const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <label
-                  htmlFor="confirmPassword"
-                  className="text-sm font-medium text-slate-400"
-                >
+                <label htmlFor="confirmPassword" className="text-sm font-medium text-slate-400">
                   Confirmar Senha
                 </label>
                 <FormInput
@@ -141,10 +128,8 @@ export const Register = () => {
                 )}
               </div>
 
-              <Button
-                type="submit"
-                className="text-white w-full h-10"
-              >
+              <Button type="submit" className="text-white w-full h-10" disabled={isPending}>
+                Cadastrar
               </Button>
             </form>
           </CardContent>
@@ -152,10 +137,7 @@ export const Register = () => {
           <CardFooter className="flex justify-center">
             <div className="text-center text-sm text-slate-400">
               <span>Já tem uma conta? </span>
-              <Link
-                to="/login"
-                className="font-semibold text-primary hover:underline"
-              >
+              <Link to="/login" className="font-semibold text-primary hover:underline">
                 Entrar
               </Link>
             </div>

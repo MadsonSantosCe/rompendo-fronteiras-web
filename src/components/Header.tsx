@@ -6,17 +6,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useNavigate } from "react-router-dom";
-import { useSignOut } from "@/hooks/auth/useAuthentication";
+import { useAuth, useSignOut } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "./FullPageLoader";
 
 export default function Header() {
-  const { mutate: signOut, isPending } = useSignOut();
-  const navigate = useNavigate();
+  const { mutateAsync: signOut, isPending } = useSignOut();
+  const { user } = useAuth();
 
-  const handleSignOut = () => {
-    signOut();
-    navigate("/login");
+  const handleSignOut = async() => {
+    await signOut();
   };
 
   return isPending ? (
@@ -72,7 +70,7 @@ export default function Header() {
             </Avatar>
             <div className="text-left hidden sm:block">
               <div className="font-medium text-sm text-gray-900 dark:text-white">
-                {}
+                {user?.name}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
                 Admin
