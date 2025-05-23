@@ -7,6 +7,7 @@ import ResetPassword from "@/pages/auth/ResetPassword";
 import { EmailVerification } from "@/pages/auth/EmailVerification";
 import { useAuth, useVerifyAcsessToken } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "@/components/FullPageLoader";
+import { AuthProvider } from "@/contexts/auth/authProvider";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isLoading } = useVerifyAcsessToken();
@@ -22,23 +23,25 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 export const Router = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/verify-email" element={<EmailVerification />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <AuthProvider>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/verify-email" element={<EmailVerification />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 };

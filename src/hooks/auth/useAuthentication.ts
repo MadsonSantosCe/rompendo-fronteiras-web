@@ -1,10 +1,10 @@
 import { ISignInPayload, ISignUpPayload } from "@/types/authTypes";
-import { getAccessToken } from "@/utils/storage/localStore";
+import { getAccessToken } from "@/utils/storage/localStorage";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useContext } from "react";
-import { AuthContext } from "@/contexts/auth/authProvider";
+import { AuthContext } from "@/contexts/auth/authContext";
 
 export function useAuth() {
   const context = useContext(AuthContext);
@@ -21,6 +21,7 @@ export function useVerifyAcsessToken() {
     queryFn: verifyAcessToken,
     staleTime: Infinity,
     enabled: !!token,
+    retry: false,
   });
 }
 export function useSignIn() {

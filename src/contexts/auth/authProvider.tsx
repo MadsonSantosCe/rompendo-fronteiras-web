@@ -1,86 +1,33 @@
-import {
-  createContext,
-  useCallback,
-  useMemo,
-  type ReactNode,
-  useState,
-} from "react";
-import axios, { type AxiosResponse } from "axios";
-import { removeAccessToken, saveAccessToken } from "@/utils/storage/localStore";
+import { useState, useCallback, useMemo, type ReactNode } from "react";
+import axios from "axios";
 import api from "@/services/api/api";
-import { ISignInPayload, ISignUpPayload } from "@/types/authTypes";
-import { toast } from "sonner";
+import { ISignInPayload, ISignUpPayload, IUser } from "@/types/authTypes";
+import { clearToken, setToken } from "@/utils/storage/localStorage";
+import { AuthContext } from "./authContext";
 
-type authProviderPromps = {
+type AuthProviderProps = {
   children: ReactNode;
 };
 
-interface IUser {
-  id: string;
-  name: string;
-  email: string;
-}
-
-interface IAuthContext {
-  user: IUser | null;
-  signIn: (payload: ISignInPayload) => Promise<void>;
-  signOut: () => Promise<void>;
-  signUp: (payload: ISignUpPayload) => Promise<void>;
-  verifyAcessToken: () => Promise<AxiosResponse>;
-}
-
-const AuthContext = createContext<IAuthContext>({} as IAuthContext);
-
-function AuthProvider({ children }: authProviderPromps) {
+function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<IUser | null>(null);
 
   const signIn = useCallback(async ({ email, password }: ISignInPayload) => {
-    try {
-      const response = await api.post("/auth/sign-in", { email, password });
-      setUser(response.data.user);
-      saveAccessToken(response.data.accessToken);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data.message);
-      }
-
-      throw new Error("Erro ao realizar login. Tente novamente mais tarde.");
-    }
+    const response = await api.post("/auth/sign-in", { email, password });
+    setUser(response.data.user);
+    setToken(response.data.accessToken);
   }, []);
 
   const signOut = useCallback(async () => {
-    try {
-      await api.post("/auth/sign-out");
-      removeAccessToken();
-      setUser(null);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data.message);
-      }
-
-      throw new Error("Erro ao cadastrar usuário. Tente novamente mais tarde.");
-    }
+    await api.post("/auth/sign-out");
+    clearToken();
+    setUser(null);
   }, []);
 
-  const signUp = useCallback(
-    async ({ name, email, password }: ISignUpPayload) => {
-      try {
-        const response = await api.post("/auth/sign-up", {
-          name,
-          email,
-          password,
-        });
-        setUser(response.data.user);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          throw new Error(error.response?.data.message);
-        }
-
-        throw new Error("Erro ao realizar logout. Tente novamente mais tarde.");
-      }
-    },
-    []
-  );
+  const signUp = useCallback(async ({ name, email, password }: ISignUpPayload) => {
+    const response = await api.post("/auth/sign-up", { name, email, password });
+    setUser(response.data.user);
+  }, []);
 
   const verifyAcessToken = useCallback(async () => {
     try {
@@ -88,6 +35,8 @@ function AuthProvider({ children }: authProviderPromps) {
       setUser(response.data.user);
       return response;
     } catch (error) {
+      setUser(null);
+      clearToken();
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         throw new Error(error.response?.data);
       }
@@ -95,55 +44,13 @@ function AuthProvider({ children }: authProviderPromps) {
     }
   }, []);
 
-  const refreshToken = useCallback(async () => {
-    try {
-      const response = await api.post("/auth/refresh-token");
-      setUser(response.data.user);
-      saveAccessToken(response.data.accessToken);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        removeAccessToken();
-        setUser(null);
-        toast.error("Sessão expirada, faça login novamente");
-      }
-    }
-  }, []);
-
-  api.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    async (error) => {
-      const originalRequest = error.config;
-      if (
-        error.response?.status === 401 &&
-        !originalRequest._retry &&
-        !originalRequest.url.includes("/auth/refresh-token")
-      ) {
-        originalRequest._retry = true;
-        try {
-          await refreshToken();
-          return api(originalRequest);
-        } catch (refreshError) {
-          signOut();
-          return Promise.reject(refreshError);
-        }
-      }
-
-      return Promise.reject(error);
-    }
-  );
-
-  const contextValues = useMemo(
-    () => ({
-      user,
-      signIn,
-      signOut,
-      signUp,
-      verifyAcessToken,
-    }),
-    [user, signIn, signOut, signUp, verifyAcessToken]
-  );
+  const contextValues = useMemo(() => ({
+    user,
+    signIn,
+    signOut,
+    signUp,
+    verifyAcessToken,
+  }), [user, signIn, signOut, signUp, verifyAcessToken]);
 
   return (
     <AuthContext.Provider value={contextValues}>
@@ -152,4 +59,4 @@ function AuthProvider({ children }: authProviderPromps) {
   );
 }
 
-export { AuthProvider, AuthContext };
+export { AuthProvider };
