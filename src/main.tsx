@@ -27,6 +27,6 @@ createRoot(document.getElementById("root")!).render(
       )}
 
     </QueryClientProvider>
-    <Toaster position="top-right" />
+    <Toaster position="top-center" />
   </StrictMode>
 );

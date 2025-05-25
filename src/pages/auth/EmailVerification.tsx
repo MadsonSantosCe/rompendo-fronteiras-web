@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -13,10 +11,37 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const EmailVerifySchema = z.object({
+  code: z.string().regex(/^\d{6}$/, {
+    message: "O código deve conter apenas 6 números.",
+  }),
+});
+
+type EmailVerifydata = z.infer<typeof EmailVerifySchema>;
 
 export const EmailVerification = () => {
-  const [otp, setOtp] = useState("");
+  const {
+    handleSubmit,
+    setValue,
+    clearErrors,
+    watch,    
+    formState: { errors },
+  } = useForm<EmailVerifydata>({
+    resolver: zodResolver(EmailVerifySchema),
+    mode: "onSubmit",
+    shouldFocusError: false,
+  });
+
+  const otp = watch("code");
+
+  const onSubmit = (data: EmailVerifydata) => {
+    console.log("Código enviado:", data);
+  };
 
   return (
     <AuthLayout>
@@ -26,31 +51,45 @@ export const EmailVerification = () => {
             <CardTitle className="text-3xl font-bold text-slate-700 flex items-center justify-center gap-2 dark:text-white">
               Verifique seu e-mail
             </CardTitle>
-            <CardDescription>digite o código de verificação!</CardDescription>
+            <CardDescription>Digite o código de verificação!</CardDescription>
           </CardHeader>
 
           <CardContent className="p-6 sm:p-8">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex justify-center">
                 <InputOTP
                   maxLength={6}
-                  pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-                  value={otp}
-                  onChange={(value) => setOtp(value)}
+                  value={otp || ""}
+                  onChange={(value) => {
+                    setValue("code", value);
+                    if (errors.code) clearErrors("code");
+                  }}
                 >
                   <InputOTPGroup>
                     {[...Array(6)].map((_, i) => (
-                      <InputOTPSlot key={i} index={i} />
+                      <InputOTPSlot className="w-10" key={i} index={i} />
                     ))}
                   </InputOTPGroup>
                 </InputOTP>
               </div>
+
+              <div className="flex justify-center">
+                {errors.code && (
+                  <p className="text-red-500 text-sm">{errors.code.message}</p>
+                )}
+              </div>
+
+              <div className="flex justify-center">
+                <Button
+                  type="submit"
+                  className="w-50"
+                  disabled={!otp || otp.length < 6}
+                >
+                  Verificar e-mail
+                </Button>
+              </div>
             </form>
           </CardContent>
-
-          <CardFooter className="flex justify-center">
-            <div className="text-center text-sm text-slate-400"></div>
-          </CardFooter>
         </Card>
       </div>
     </AuthLayout>
