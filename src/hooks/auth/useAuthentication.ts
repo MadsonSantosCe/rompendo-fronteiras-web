@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/auth/authContext";
+import axios from "axios";
 
 export function useAuth() {
   const context = useContext(AuthContext);
@@ -37,7 +38,7 @@ export function useSignIn() {
     },
     onError: (error: unknown) => {
       const message =
-        error instanceof Error ? error.message : "Erro ao fazer login.";
+        axios.isAxiosError(error) ? error.response?.data.message : "Erro ao fazer login."; 
       toast.error(message);
     },
   });
@@ -56,7 +57,7 @@ export function useSignOut() {
     },
     onError: (error: unknown) => {
       const message =
-        error instanceof Error ? error.message : "Erro ao fazer logout.";
+        axios.isAxiosError(error) ? error.response?.data.message : "Erro ao fazer logout.";
       toast.error(message);
     },
   });
@@ -75,7 +76,7 @@ export function useSignUp() {
     },
     onError: (error: unknown) => {
       const message =
-        error instanceof Error ? error.message : "Erro ao criar conta.";
+        axios.isAxiosError(error) ? error.response?.data.message  : "Erro ao criar conta.";
       toast.error(message);
     },
   });
