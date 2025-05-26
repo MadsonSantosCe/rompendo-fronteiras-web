@@ -25,6 +25,7 @@ export function useVerifyAcsessToken() {
     retry: false,
   });
 }
+
 export function useSignIn() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
@@ -81,3 +82,24 @@ export function useSignUp() {
     },
   });
 }
+
+export function useVerifyEmail() {
+  const { verifyEmail } = useAuth();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationKey: ["verifyEmail"],
+    mutationFn: (code: string) => verifyEmail(code),
+    onSuccess: () => {
+      toast.success("Email verificado com sucesso!");
+      navigate("/");
+    },
+    onError: (error: unknown) => {
+      const message =
+        axios.isAxiosError(error) ? error.response?.data.message : "Erro ao verificar email.";
+      toast.error(message);
+    },
+  });
+}
+
+

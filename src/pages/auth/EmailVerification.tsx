@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useVerifyEmail } from "@/hooks/auth/useAuthentication";
 
 const EmailVerifySchema = z.object({
   code: z.string().regex(/^\d{6}$/, {
@@ -37,10 +38,12 @@ export const EmailVerification = () => {
     shouldFocusError: false,
   });
 
-  const otp = watch("code");
+  const otp = watch("code") || "";
 
-  const onSubmit = (data: EmailVerifydata) => {
-    console.log("Código enviado:", data);
+  const { mutateAsync: verifyEmail, isPending } = useVerifyEmail();
+
+  const onSubmit = async ({ code }: EmailVerifydata) => {
+    await verifyEmail(code);
   };
 
   return (
@@ -75,7 +78,7 @@ export const EmailVerification = () => {
 
               <div className="flex justify-center">
                 {errors.code && (
-                  <p className="text-red-500 text-sm">{errors.code.message}</p>
+                  <p className="text-red-400 text-xs italic pt-1">{errors.code.message}</p>
                 )}
               </div>
 
@@ -83,7 +86,7 @@ export const EmailVerification = () => {
                 <Button
                   type="submit"
                   className="w-50"
-                  disabled={!otp || otp.length < 6}
+                  disabled={otp.length < 6 || isPending}
                 >
                   Verificar e-mail
                 </Button>

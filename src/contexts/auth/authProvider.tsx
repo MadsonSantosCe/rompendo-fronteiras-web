@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, type ReactNode } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import api from "@/services/api/api";
 import { ISignInPayload, ISignUpPayload, IUser } from "@/types/authTypes";
 import { clearToken, setToken } from "@/utils/storage/localStorage";
@@ -8,6 +8,15 @@ import { AuthContext } from "./authContext";
 type AuthProviderProps = {
   children: ReactNode;
 };
+
+export interface IAuthContext {
+  user: IUser | null;
+  signIn: (payload: ISignInPayload) => Promise<void>;
+  signOut: () => Promise<void>;
+  signUp: (payload: ISignUpPayload) => Promise<void>;  
+  verifyEmail: (email: string) => Promise<void>;
+  verifyAcessToken: () => Promise<AxiosResponse>;
+}
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<IUser | null>(null);
@@ -27,6 +36,13 @@ function AuthProvider({ children }: AuthProviderProps) {
   const signUp = useCallback(async ({ name, email, password }: ISignUpPayload) => {
     const response = await api.post("/auth/sign-up", { name, email, password });
     setUser(response.data.user);
+  }, []);  
+
+  const verifyEmail = useCallback(async (code: string) => {
+      const response = await api.post("/auth/verify-email", { code });
+      setUser(response.data.user);
+      setToken(response.data.accessToken);
+      return response.data;
   }, []);
 
   const verifyAcessToken = useCallback(async () => {
@@ -49,8 +65,9 @@ function AuthProvider({ children }: AuthProviderProps) {
     signIn,
     signOut,
     signUp,
-    verifyAcessToken,
-  }), [user, signIn, signOut, signUp, verifyAcessToken]);
+    verifyEmail,
+    verifyAcessToken,    
+  }), [user, signIn, signOut, signUp, verifyEmail, verifyAcessToken]);
 
   return (
     <AuthContext.Provider value={contextValues}>
