@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useSignIn } from "@/hooks/auth/useAuthentication";
 
 const LoginFormSchema = z.object({
@@ -90,16 +89,9 @@ export const Login = () => {
                 )}
               </div>
 
-              <div className="flex items-center justify-between">
-                <label className="flex items-center space-x-2 text-sm cursor-pointer">
-                  <Checkbox id="remember" />
-                  <span className="text-slate-400 select-none">Lembrar-me</span>
-                </label>
-              </div>
-
               <Button
                 type="submit"
-                className="text-white w-full h-10"
+                className="text-white w-full h-10 mt-5"
                 disabled={isPending}
               >
                 Entrar

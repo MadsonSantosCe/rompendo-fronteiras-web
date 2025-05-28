@@ -2,12 +2,12 @@ import { Home } from "@/pages/home/Home";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
-import ForgotPassword from "@/pages/auth/ForgotPassword";
-import ResetPassword from "@/pages/auth/ResetPassword";
 import { EmailVerification } from "@/pages/auth/EmailVerification";
 import { useAuth, useVerifyAcsessToken } from "@/hooks/auth/useAuthentication";
 import { FullPageLoader } from "@/components/FullPageLoader";
 import { AuthProvider } from "@/contexts/auth/authProvider";
+import { ForgotPassword } from "@/pages/auth/ForgotPassword";
+import { ResetPassword } from "@/pages/auth/ResetPassword";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isLoading } = useVerifyAcsessToken();
