@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FormInput } from "@/components/ui/form-input";
+import { useForgotPassword } from "@/hooks/auth/useAuthentication";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
@@ -27,10 +28,12 @@ export const ForgotPassword = () => {
     formState: { errors },
   } = useForm<ForgotPasswordForm>({
     resolver: zodResolver(ForgotPasswordSchema),
-  });
+  });  
+  
+  const { mutateAsync: forgotPassword , isPending } = useForgotPassword();
 
-  const onSubmit = ({ email }: ForgotPasswordForm) => {
-    console.log(email);
+  const onSubmit = async ({ email }: ForgotPasswordForm) => {
+    await forgotPassword(email);
   };
 
   return (
@@ -70,7 +73,7 @@ export const ForgotPassword = () => {
               </div>
 
               <div className="flex justify-center">
-                <Button type="submit" className="w-full mt-10" disabled={false}>
+                <Button type="submit" className="w-full mt-10" disabled={isPending}>
                   Enviar e-mail
                 </Button>
               </div>

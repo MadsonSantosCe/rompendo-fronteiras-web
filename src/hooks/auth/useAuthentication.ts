@@ -102,4 +102,21 @@ export function useVerifyEmail() {
   });
 }
 
+export function useForgotPassword() {
+  const { forgotPassword } = useAuth();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationKey: ["forgotPassword"],
+    mutationFn: (email: string) => forgotPassword(email),
+    onSuccess: () => {
+      toast.success("Email enviado com sucesso!");
+      navigate("/login");
+      },
+    onError: (error: unknown) => {
+      const message =
+        axios.isAxiosError(error) ? error.response?.data.message : "Erro ao enviar email.";
+      toast.error(message);
+    },
+  });
+}
 

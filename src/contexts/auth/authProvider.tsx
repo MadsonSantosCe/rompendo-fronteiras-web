@@ -16,6 +16,7 @@ export interface IAuthContext {
   signUp: (payload: ISignUpPayload) => Promise<void>;  
   verifyEmail: (email: string) => Promise<void>;
   verifyAcessToken: () => Promise<AxiosResponse>;
+  forgotPassword: (email: string) => Promise<void>;
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
@@ -60,14 +61,20 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
+  const forgotPassword = useCallback(async (email: string) => {
+    const response = await api.post("/auth/forgot-password", { email });
+    return response.data;
+  }, []);
+
   const contextValues = useMemo(() => ({
     user,
     signIn,
     signOut,
     signUp,
     verifyEmail,
-    verifyAcessToken,    
-  }), [user, signIn, signOut, signUp, verifyEmail, verifyAcessToken]);
+    verifyAcessToken,
+    forgotPassword,    
+  }), [user, signIn, signOut, signUp, verifyEmail, verifyAcessToken, forgotPassword]);
 
   return (
     <AuthContext.Provider value={contextValues}>
