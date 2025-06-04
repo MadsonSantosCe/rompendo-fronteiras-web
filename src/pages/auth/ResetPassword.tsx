@@ -45,9 +45,8 @@ export const ResetPassword = () => {
   const params = useParams();
   const token = params.token ?? "";
 
+  const { mutateAsync: resetPassword, isPending } = useResetPassword();
 
-  const { mutateAsync: resetPassword , isPending } = useResetPassword();
-  
   const onSubmit = ({ password }: ResetPasswordForm) => {
     resetPassword({ password, token });
   };
@@ -114,7 +113,11 @@ export const ResetPassword = () => {
               </div>
 
               <div className="flex justify-center">
-                <Button type="submit" className="w-full mt-5" disabled={isPending}>
+                <Button
+                  type="submit"
+                  className="w-full mt-5"
+                  disabled={isPending}
+                >
                   Atualizar senha
                 </Button>
               </div>
