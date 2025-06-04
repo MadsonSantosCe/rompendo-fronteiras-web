@@ -13,10 +13,11 @@ export interface IAuthContext {
   user: IUser | null;
   signIn: (payload: ISignInPayload) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (payload: ISignUpPayload) => Promise<void>;  
+  signUp: (payload: ISignUpPayload) => Promise<void>;
   verifyEmail: (email: string) => Promise<void>;
   verifyAcessToken: () => Promise<AxiosResponse>;
   forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (password: string, code: string) => Promise<void>;
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
@@ -34,16 +35,23 @@ function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   }, []);
 
-  const signUp = useCallback(async ({ name, email, password }: ISignUpPayload) => {
-    const response = await api.post("/auth/sign-up", { name, email, password });
-    setUser(response.data.user);
-  }, []);  
+  const signUp = useCallback(
+    async ({ name, email, password }: ISignUpPayload) => {
+      const response = await api.post("/auth/sign-up", {
+        name,
+        email,
+        password,
+      });
+      setUser(response.data.user);
+    },
+    []
+  );
 
   const verifyEmail = useCallback(async (code: string) => {
-      const response = await api.post("/auth/verify-email", { code });
-      setUser(response.data.user);
-      setToken(response.data.accessToken);
-      return response.data;
+    const response = await api.post("/auth/verify-email", { code });
+    setUser(response.data.user);
+    setToken(response.data.accessToken);
+    return response.data;
   }, []);
 
   const verifyAcessToken = useCallback(async () => {
@@ -66,15 +74,36 @@ function AuthProvider({ children }: AuthProviderProps) {
     return response.data;
   }, []);
 
-  const contextValues = useMemo(() => ({
-    user,
-    signIn,
-    signOut,
-    signUp,
-    verifyEmail,
-    verifyAcessToken,
-    forgotPassword,    
-  }), [user, signIn, signOut, signUp, verifyEmail, verifyAcessToken, forgotPassword]);
+  const resetPassword = useCallback(
+    async ({ password, token }: { password: string; token: string }) => {
+      const response = await api.post(`/auth/reset-password/${token}`, {
+        password,
+      });
+      return response.data;
+    }, []);
+
+  const contextValues = useMemo(
+    () => ({
+      user,
+      signIn,
+      signOut,
+      signUp,
+      verifyEmail,
+      verifyAcessToken,
+      forgotPassword,
+      resetPassword,
+    }),
+    [
+      user,
+      signIn,
+      signOut,
+      signUp,
+      verifyEmail,
+      verifyAcessToken,
+      forgotPassword,
+      resetPassword,
+    ]
+  );
 
   return (
     <AuthContext.Provider value={contextValues}>

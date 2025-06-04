@@ -10,12 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FormInput } from "@/components/ui/form-input";
+import { useResetPassword } from "@/hooks/auth/useAuthentication";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { z } from "zod";
 
-const ForgotPasswordSchema = z
+const ResetPasswordSchema = z
   .object({
     password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
     confirmPassword: z
@@ -27,7 +28,7 @@ const ForgotPasswordSchema = z
     path: ["confirmPassword"],
   });
 
-type ForgotPasswordForm = z.infer<typeof ForgotPasswordSchema>;
+type ResetPasswordForm = z.infer<typeof ResetPasswordSchema>;
 
 export const ResetPassword = () => {
   const {
@@ -35,14 +36,20 @@ export const ResetPassword = () => {
     register,
     watch,
     formState: { errors },
-  } = useForm<ForgotPasswordForm>({
-    resolver: zodResolver(ForgotPasswordSchema),
+  } = useForm<ResetPasswordForm>({
+    resolver: zodResolver(ResetPasswordSchema),
   });
 
   const password = watch("password");
+
+  const params = useParams();
+  const token = params.token ?? "";
+
+
+  const { mutateAsync: resetPassword , isPending } = useResetPassword();
   
-  const onSubmit = ({ password, confirmPassword }: ForgotPasswordForm) => {
-    console.log(password, confirmPassword);
+  const onSubmit = ({ password }: ResetPasswordForm) => {
+    resetPassword({ password, token });
   };
 
   return (
@@ -107,7 +114,7 @@ export const ResetPassword = () => {
               </div>
 
               <div className="flex justify-center">
-                <Button type="submit" className="w-full mt-5" disabled={false}>
+                <Button type="submit" className="w-full mt-5" disabled={isPending}>
                   Atualizar senha
                 </Button>
               </div>

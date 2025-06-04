@@ -120,3 +120,22 @@ export function useForgotPassword() {
   });
 }
 
+export function useResetPassword() {
+  const { resetPassword } = useAuth();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationKey: ["resetPassword"],
+    mutationFn: (payload: { password: string; token: string }) => 
+      resetPassword(payload),
+    onSuccess: () => {
+      toast.success("Senha alterada com sucesso!");
+      navigate("/login");
+    },
+    onError: (error: unknown) => {
+      const message =
+        axios.isAxiosError(error) ? error.response?.data.message : "Erro ao enviar email.";
+      toast.error(message);
+    },
+  });
+}
+
